@@ -12,7 +12,7 @@ not implemented yet.
 
 Here are some examples:
 
-```go
+```sh
 # Adding a new task
 task-cli add "Buy groceries"
 # Output: Task added successfully (ID: 1)
