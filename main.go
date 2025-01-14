@@ -9,6 +9,8 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -25,25 +27,60 @@ type task struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func main() {
-	dataPath := "tasks.json"
-	data, err := os.ReadFile(dataPath)
-	if err != nil && os.IsNotExist(err) {
-		log.Fatalln(err)
+// Get string representation of task
+func (t task) String() string {
+	return fmt.Sprintf("%d: [%s] %s", t.Id, t.Status, t.Description)
+}
+
+// If there is an error, print it
+func maybe(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Read given file
+func readTasksFile(path string) []task {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []task{}
+		}
+		maybe(err)
 	}
 
 	var tasks []task
-	json.Unmarshal(data, &tasks)
+	err = json.Unmarshal(data, &tasks)
+	maybe(err)
+	return tasks
+}
 
-	// do whatever you want with tasks
+func writeTasksFile(path string, tasks []task) {
+	data, err := json.Marshal(tasks)
+	maybe(err)
 
-	data, err = json.Marshal(tasks)
 	var buffer bytes.Buffer
 	json.Indent(&buffer, data, "", "    ")
 	buffer.WriteRune('\n')
 	data = buffer.Bytes()
-	err = os.WriteFile(dataPath, data, 0644)
-	if err != nil {
-		log.Fatalln(err)
+	err = os.WriteFile(path, data, 0644)
+	maybe(err)
+}
+
+func main() {
+	tasksPath := "tasks.json"
+	tasks := readTasksFile(tasksPath)
+
+	var subcmd string
+	if flag.NArg() == 0 {
+		subcmd = "list"
 	}
+	switch subcmd {
+	case "list":
+		for _, task := range tasks {
+			fmt.Println(task)
+		}
+	}
+
+	writeTasksFile(tasksPath, tasks)
 }
