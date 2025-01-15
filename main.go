@@ -71,15 +71,18 @@ func main() {
 	tasksPath := "tasks.json"
 	tasks := readTasksFile(tasksPath)
 
-	var subcmd string
-	if flag.NArg() == 0 {
-		subcmd = "list"
+	subcmd := "list"
+	flag.Parse()
+	if flag.NArg() > 0 {
+		subcmd = flag.Arg(0)
 	}
 	switch subcmd {
 	case "list":
 		for _, task := range tasks {
 			fmt.Println(task)
 		}
+	default:
+		log.Fatalf("unknown sub command: %q", subcmd)
 	}
 
 	writeTasksFile(tasksPath, tasks)
