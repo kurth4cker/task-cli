@@ -7,7 +7,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -56,13 +55,9 @@ func readTasksFile(path string) []task {
 }
 
 func writeTasksFile(path string, tasks []task) {
-	data, err := json.Marshal(tasks)
+	data, err := json.MarshalIndent(tasks, "", "    ")
 	maybe(err)
-
-	var buffer bytes.Buffer
-	json.Indent(&buffer, data, "", "    ")
-	buffer.WriteRune('\n')
-	data = buffer.Bytes()
+	data = append(data, byte('\n'))
 	err = os.WriteFile(path, data, 0644)
 	maybe(err)
 }
