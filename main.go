@@ -31,6 +31,16 @@ func (t task) String() string {
 	return fmt.Sprintf("%d: [%s] %s", t.Id, t.Status, t.Description)
 }
 
+func findNextId(tasks []task) uint {
+	var nextId uint
+	for _, task := range tasks {
+		if task.Id > nextId {
+			nextId = task.Id + 1
+		}
+	}
+	return nextId
+}
+
 // If there is an error, print it
 func maybe(err error) {
 	if err != nil {
