@@ -3,7 +3,10 @@
 
 package main
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestFindNextId(t *testing.T) {
 	assertGotWant := func(t testing.TB, got, want uint) {
@@ -41,5 +44,44 @@ func TestFindNextId(t *testing.T) {
 		for _, task := range tasks {
 			assertGotNotWant(t, got, task.Id)
 		}
+	})
+}
+
+func TestSortedTasks(t *testing.T) {
+	compareTaskId := func(a, b task) int {
+		if a.Id < b.Id {
+			return -1
+		} else if a.Id > b.Id {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	assertSorted := func(t testing.TB, tasks []task) {
+		t.Helper()
+		if !slices.IsSortedFunc(tasks, compareTaskId) {
+			t.Errorf("task array should be sorted, got %q", tasks)
+		}
+	}
+
+	t.Run("sorted of sorted", func(t *testing.T) {
+		tasks := []task{
+			{Id: 0},
+			{Id: 1},
+			{Id: 2},
+		}
+		got := sortedTasks(tasks)
+		assertSorted(t, got)
+	})
+
+	t.Run("sort normally", func(t *testing.T) {
+		tasks := []task{
+			{Id: 3},
+			{Id: 2},
+			{Id: 0},
+		}
+		got := sortedTasks(tasks)
+		assertSorted(t, got)
 	})
 }

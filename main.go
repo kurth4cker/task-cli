@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
 	"time"
 )
 
@@ -46,6 +47,21 @@ func maybe(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// Return sorted copy of given task slice
+func sortedTasks(tasks []task) []task {
+	compareTaskId := func(a, b task) int {
+		if a.Id < b.Id {
+			return -1
+		} else if a.Id > b.Id {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	return slices.SortedFunc(slices.Values(tasks), compareTaskId)
 }
 
 // Read given file
