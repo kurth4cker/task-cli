@@ -84,4 +84,21 @@ func TestSortedTasks(t *testing.T) {
 		got := sortedTasks(tasks)
 		assertSorted(t, got)
 	})
+
+	t.Run("do not modify original slice", func(t *testing.T) {
+		tasks := []task{
+			{Id: 4},
+			{Id: 3},
+			{Id: 2},
+			{Id: 1},
+			{Id: 0},
+		}
+		oldTasks := slices.Clone(tasks)
+		sortedTasks(tasks)
+		if slices.CompareFunc(oldTasks, tasks, compareTaskId) != 0 {
+			t.Errorf("modified original task array; old %q, new %q",
+				oldTasks,
+				tasks)
+		}
+	})
 }
