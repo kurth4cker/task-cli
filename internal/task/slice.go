@@ -3,8 +3,6 @@
 
 package task
 
-import "slices"
-
 // Find a new Id for newly added task
 func findNextId(tasks []Task) uint {
 	var nextId uint
@@ -14,19 +12,4 @@ func findNextId(tasks []Task) uint {
 		}
 	}
 	return nextId
-}
-
-// Return sorted copy of given task slice. Tasks are compared by Id fields.
-func sortedTasks(tasks []Task) []Task {
-	compareTaskId := func(a, b Task) int {
-		if a.Id < b.Id {
-			return -1
-		} else if a.Id > b.Id {
-			return 1
-		} else {
-			return 0
-		}
-	}
-
-	return slices.SortedFunc(slices.Values(tasks), compareTaskId)
 }

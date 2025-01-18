@@ -4,7 +4,6 @@
 package task
 
 import (
-	"slices"
 	"testing"
 )
 
@@ -43,62 +42,6 @@ func TestFindNextId(t *testing.T) {
 		got := findNextId(tasks)
 		for _, Task := range tasks {
 			assertGotNotWant(t, got, Task.Id)
-		}
-	})
-}
-
-func TestSortedTasks(t *testing.T) {
-	compareTaskId := func(a, b Task) int {
-		if a.Id < b.Id {
-			return -1
-		} else if a.Id > b.Id {
-			return 1
-		} else {
-			return 0
-		}
-	}
-
-	assertSorted := func(t testing.TB, tasks []Task) {
-		t.Helper()
-		if !slices.IsSortedFunc(tasks, compareTaskId) {
-			t.Errorf("task array should be sorted, got %q", tasks)
-		}
-	}
-
-	t.Run("sorted of sorted", func(t *testing.T) {
-		tasks := []Task{
-			{Id: 0},
-			{Id: 1},
-			{Id: 2},
-		}
-		got := sortedTasks(tasks)
-		assertSorted(t, got)
-	})
-
-	t.Run("sort normally", func(t *testing.T) {
-		tasks := []Task{
-			{Id: 3},
-			{Id: 2},
-			{Id: 0},
-		}
-		got := sortedTasks(tasks)
-		assertSorted(t, got)
-	})
-
-	t.Run("do not modify original slice", func(t *testing.T) {
-		tasks := []Task{
-			{Id: 4},
-			{Id: 3},
-			{Id: 2},
-			{Id: 1},
-			{Id: 0},
-		}
-		oldTasks := slices.Clone(tasks)
-		sortedTasks(tasks)
-		if slices.CompareFunc(oldTasks, tasks, compareTaskId) != 0 {
-			t.Errorf("modified original task array; old %q, new %q",
-				oldTasks,
-				tasks)
 		}
 	})
 }
