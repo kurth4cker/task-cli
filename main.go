@@ -10,13 +10,13 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"codeberg.org/kurth4cker/task-cli-go/internal/task"
 )
 
 func main() {
 	tasksPath := "tasks.json"
-	tasks := task.ReadTasksFile(tasksPath)
 
 	subcmd := "list"
 	flag.Parse()
@@ -25,12 +25,24 @@ func main() {
 	}
 	switch subcmd {
 	case "list":
+		tasks := task.ReadTasksFile(tasksPath)
 		for _, task := range tasks {
 			fmt.Println(task)
 		}
+	case "add":
+		if flag.NArg() != 2 {
+			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")
+			os.Exit(1)
+		}
+		tasks := task.ReadTasksFile(tasksPath)
+		newTask := task.Task{
+			Id:          task.FindNextId(tasks),
+			Description: flag.Arg(1),
+			Status:      "todo",
+		}
+		tasks = append(tasks, newTask)
+		task.WriteTasksFile(tasksPath, tasks)
 	default:
 		log.Fatalf("unknown sub command: %q", subcmd)
 	}
-
-	task.WriteTasksFile(tasksPath, tasks)
 }
