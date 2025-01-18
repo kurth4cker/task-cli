@@ -3,10 +3,7 @@
 
 package task
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
 type Task struct {
 	Id          uint   `json:"id"`
@@ -14,9 +11,6 @@ type Task struct {
 
 	// One of "done", "todo", "in-progress"
 	Status string `json:"status"`
-
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 // Get string representation of task
