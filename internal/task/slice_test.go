@@ -6,6 +6,15 @@ package task
 import "testing"
 
 func TestFindNextId(t *testing.T) {
+	containsId := func(tasks []Task, id uint) bool {
+		for _, ta := range tasks {
+			if ta.Id == id {
+				return true
+			}
+		}
+		return false
+	}
+
 	t.Run("should not duplicate", func(t *testing.T) {
 		tasks := []Task{
 			{Id: 0},
@@ -15,12 +24,9 @@ func TestFindNextId(t *testing.T) {
 			{Id: 4},
 			{Id: 5},
 		}
-
 		got := FindNextId(tasks)
-		for _, task := range tasks {
-			if got == task.Id {
-				t.Errorf("should not give an existing number: %d\n", got)
-			}
+		if containsId(tasks, got) {
+			t.Errorf("gave an existing Id: %d", got)
 		}
 	})
 }

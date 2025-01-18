@@ -5,11 +5,11 @@ package task
 
 // Find a new Id for newly added task
 func FindNextId(tasks []Task) uint {
-	var nextId uint
+	var maxId uint
 	for _, task := range tasks {
-		if task.Id > nextId {
-			nextId = task.Id + 1
+		if maxId < task.Id {
+			maxId = task.Id
 		}
 	}
-	return nextId
+	return maxId + 1
 }
