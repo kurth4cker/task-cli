@@ -4,7 +4,7 @@
 package task
 
 // Find a new Id for newly added task
-func findNextId(tasks []Task) uint {
+func FindNextId(tasks []Task) uint {
 	var nextId uint
 	for _, task := range tasks {
 		if task.Id > nextId {
