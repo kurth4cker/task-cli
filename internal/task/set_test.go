@@ -52,18 +52,4 @@ func TestSetAddDescription(t *testing.T) {
 			}
 		}
 	})
-
-	t.Run("add to unsorted Set", func(t *testing.T) {
-	})
-
-	t.Run("add to sorted Set", func(t *testing.T) {
-	})
-}
-
-func TestSetMark(t *testing.T) {
-	t.Run("mark existing Task", func(t *testing.T) {
-	})
-
-	t.Run("mark non-existent Task", func(t *testing.T) {
-	})
 }
