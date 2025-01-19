@@ -8,6 +8,7 @@ type Set struct {
 	tasks []Task
 }
 
+// Add a new Task with given description and a unique Id
 func (s *Set) AddDescription(description string) {
 	t := Task{
 		Id:          FindNextId(s.tasks),
