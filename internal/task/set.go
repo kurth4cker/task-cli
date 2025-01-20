@@ -11,9 +11,19 @@ type Set struct {
 // Add a new Task with given description and a unique Id
 func (s *Set) AddDescription(description string) {
 	t := Task{
-		Id:          FindNextId(s.tasks),
+		Id:          s.newId(),
 		Description: description,
-		Status: "todo",
+		Status:      "todo",
 	}
 	s.tasks = append(s.tasks, t)
+}
+
+func (s Set) newId() uint {
+	var maxId uint
+	for _, task := range s.tasks {
+		if maxId < task.Id {
+			maxId = task.Id
+		}
+	}
+	return maxId + 1
 }

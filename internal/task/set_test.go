@@ -3,7 +3,10 @@
 
 package task
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestSetAddDescription(t *testing.T) {
 	t.Run("should add to empty Set", func(t *testing.T) {
@@ -62,6 +65,26 @@ func TestSetAddDescription(t *testing.T) {
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+}
+
+func TestSetNewId(t *testing.T) {
+	newSetFromIds := func(ids ...uint) (set Set) {
+		for _, id := range ids {
+			set.tasks = append(set.tasks, Task{Id: id})
+		}
+		return
+	}
+
+	t.Run("should be unique", func(t *testing.T) {
+		ids := []uint{0, 1, 2, 3, 4}
+		set := newSetFromIds(ids...)
+
+		newId := set.newId()
+
+		if slices.Contains(ids, newId) {
+			t.Errorf("not unique: given %v, got %d", ids, newId)
 		}
 	})
 }
