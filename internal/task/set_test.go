@@ -52,4 +52,16 @@ func TestSetAddDescription(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("should set Status to \"todo\"", func(t *testing.T) {
+		var set Set
+		set.AddDescription("task 1")
+
+		got := set.tasks[0].Status
+		want := "todo"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
 }

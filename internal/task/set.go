@@ -13,6 +13,7 @@ func (s *Set) AddDescription(description string) {
 	t := Task{
 		Id:          FindNextId(s.tasks),
 		Description: description,
+		Status: "todo",
 	}
 	s.tasks = append(s.tasks, t)
 }
