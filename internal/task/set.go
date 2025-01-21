@@ -3,6 +3,8 @@
 
 package task
 
+import "encoding/json"
+
 // Set of Task's
 type Set struct {
 	tasks []Task
@@ -16,6 +18,13 @@ func (s *Set) AddDescription(description string) {
 		Status:      "todo",
 	}
 	s.tasks = append(s.tasks, t)
+}
+
+// Returns JSON representation of Set as JSON Array.
+//
+// Each element is a [Task] object.
+func (s Set) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.tasks)
 }
 
 // Generate a new Id which is not found in tasks

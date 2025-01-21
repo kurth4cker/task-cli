@@ -4,6 +4,8 @@
 package task
 
 import (
+	"bytes"
+	"encoding/json"
 	"slices"
 	"testing"
 )
@@ -85,6 +87,28 @@ func TestSetNewId(t *testing.T) {
 
 		if slices.Contains(ids, newId) {
 			t.Errorf("not unique: given %v, got %d", ids, newId)
+		}
+	})
+}
+
+func TestSetJSONMarshal(t *testing.T) {
+	t.Run("should marshal single element Set", func(t *testing.T) {
+		var set Set
+		set.AddDescription("task 1")
+		set.tasks[0].Id = 0
+		data, err := json.Marshal(set)
+		if err != nil {
+			t.Errorf("should marshal to json, failed with %e", err)
+		}
+		var buffer bytes.Buffer
+		if err := json.Compact(&buffer, data); err != nil {
+			t.Fatalf("compacting failed: %e", err)
+		}
+
+		got := buffer.String()
+		want := `[{"id":0,"description":"task 1","status":"todo"}]`
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
 		}
 	})
 }
