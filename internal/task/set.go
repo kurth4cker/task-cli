@@ -18,6 +18,9 @@ func (s *Set) AddDescription(description string) {
 	s.tasks = append(s.tasks, t)
 }
 
+// Generate a new Id which is not found in tasks
+//
+// This Id typically used for adding a new Task to Set.
 func (s Set) newId() uint {
 	var maxId uint
 	for _, task := range s.tasks {
