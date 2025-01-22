@@ -112,3 +112,33 @@ func TestSetJSONMarshal(t *testing.T) {
 		}
 	})
 }
+
+func TestSetUnmarshalJSON(t *testing.T) {
+	t.Run("should unmarshal single element Set", func(t *testing.T) {
+		given := []byte(`
+[
+	{
+		"id": 1,
+		"description": "task 1",
+		"status": "todo"
+	}
+]
+`)
+		var set Set
+		if err := json.Unmarshal(given, &set); err != nil {
+			t.Fatalf("unmarshal failed: %e", err)
+		}
+		got := set.tasks[0]
+		want := Task{
+			Id:          1,
+			Description: "task 1",
+			Status:      "todo",
+		}
+		if got != want {
+			t.Errorf("got %v, want %v, given %s",
+				got,
+				want,
+				string(given))
+		}
+	})
+}

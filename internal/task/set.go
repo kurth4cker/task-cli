@@ -27,6 +27,10 @@ func (s Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.tasks)
 }
 
+func (s *Set) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &s.tasks)
+}
+
 // Generate a new Id which is not found in tasks
 //
 // This Id typically used for adding a new Task to Set.
