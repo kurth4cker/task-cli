@@ -34,14 +34,16 @@ func main() {
 			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")
 			os.Exit(1)
 		}
-		tasks := task.ReadTasksFile(tasksPath)
-		newTask := task.Task{
-			Id:          task.FindNextId(tasks),
-			Description: flag.Arg(1),
-			Status:      "todo",
+		set, err := task.NewSetFile(tasksPath)
+		if err != nil {
+			if os.IsNotExist(err) {
+				set = &task.Set{}
+			} else {
+				log.Fatalf("error: %e", err)
+			}
 		}
-		tasks = append(tasks, newTask)
-		task.WriteTasksFile(tasksPath, tasks)
+		set.AddDescription(flag.Arg(1))
+		set.WriteFile(tasksPath)
 	default:
 		log.Fatalf("unknown sub command: %q", subcmd)
 	}

@@ -6,7 +6,22 @@ package task
 import (
 	"encoding/json"
 	"io"
+	"os"
 )
+
+func NewSetFile(path string) (*Set, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var set Set
+	if _, err := set.ReadFrom(file); err != nil {
+		return nil, err
+	}
+	return &set, nil
+}
 
 // Set of Task's
 type Set struct {
@@ -26,7 +41,7 @@ func (s *Set) AddDescription(description string) {
 // Returns JSON representation of Set as JSON Array.
 //
 // Each element is a [Task] object.
-func (s Set) MarshalJSON() ([]byte, error) {
+func (s *Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.tasks)
 }
 
@@ -45,6 +60,21 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 
 func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.tasks)
+}
+
+// TODO:
+func (s *Set) WriteFile(path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = s.WriteTo(file)
+	if err != nil {
+		return err
+	}
+	_, err = file.WriteString("\n")
+	return err
 }
 
 // Write to given Writer as indented json encoded data.

@@ -196,3 +196,7 @@ func TestSetWriteTo(t *testing.T) {
 		}
 	})
 }
+
+func TestSetReadFile(t *testing.T) {
+	// TODO: find a way for test this
+}
