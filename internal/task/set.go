@@ -3,7 +3,10 @@
 
 package task
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"io"
+)
 
 // Set of Task's
 type Set struct {
@@ -27,8 +30,31 @@ func (s Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.tasks)
 }
 
+// Read from given Reader.
+//
+// Reader should contain json encoded Task Set data. ReadFrom decodes and
+// appends all elements into Set.
+func (s *Set) ReadFrom(r io.Reader) (int64, error) {
+	data, err := io.ReadAll(r)
+	if err != nil {
+		return int64(len(data)), err
+	}
+	err = json.Unmarshal(data, s)
+	return int64(len(data)), err
+}
+
 func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.tasks)
+}
+
+// Write to given Writer as indented json encoded data.
+func (s *Set) WriteTo(w io.Writer) (int64, error) {
+	data, err := json.MarshalIndent(s, "", "    ")
+	if err != nil {
+		return int64(len(data)), err
+	}
+	n, err := w.Write(data)
+	return int64(n), err
 }
 
 // Generate a new Id which is not found in tasks
