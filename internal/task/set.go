@@ -6,6 +6,7 @@ package task
 import (
 	"encoding/json"
 	"io"
+	"iter"
 	"os"
 )
 
@@ -36,6 +37,16 @@ func (s *Set) AddDescription(description string) {
 		Status:      "todo",
 	}
 	s.tasks = append(s.tasks, t)
+}
+
+func (s Set) All() iter.Seq[Task] {
+	return func(yield func(Task) bool) {
+		for _, v := range s.tasks {
+			if !yield(v) {
+				return
+			}
+		}
+	}
 }
 
 // Returns JSON representation of Set as JSON Array.

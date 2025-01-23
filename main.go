@@ -25,6 +25,18 @@ func main() {
 	}
 	switch subcmd {
 	case "list":
+		set, err := task.NewSetFile(tasksPath)
+		if err != nil {
+			if os.IsNotExist(err) {
+				set = &task.Set{}
+			} else {
+				log.Fatalf("cannoct read file: %s", err)
+			}
+		}
+		for task := range set.All() {
+			fmt.Println(task)
+		}
+		set.WriteFile(tasksPath)
 	case "add":
 		if flag.NArg() != 2 {
 			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")

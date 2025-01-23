@@ -200,3 +200,20 @@ func TestSetWriteTo(t *testing.T) {
 func TestSetReadFile(t *testing.T) {
 	// TODO: find a way for test this
 }
+
+func TestSetAll(t *testing.T) {
+	t.Run("should iterate over all Tasks", func(t *testing.T) {
+		var set Set
+		set.AddDescription("task 0")
+		set.AddDescription("task 1")
+
+		var got []string
+		for task := range set.All() {
+			got = append(got, task.Description)
+		}
+		want := []string{"task 0", "task 1"}
+		if !slices.Equal(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
