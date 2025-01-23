@@ -41,7 +41,7 @@ func (s *Set) AddDescription(description string) {
 // Returns JSON representation of Set as JSON Array.
 //
 // Each element is a [Task] object.
-func (s *Set) MarshalJSON() ([]byte, error) {
+func (s Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.tasks)
 }
 

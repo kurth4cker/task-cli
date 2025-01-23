@@ -25,10 +25,6 @@ func main() {
 	}
 	switch subcmd {
 	case "list":
-		tasks := task.ReadTasksFile(tasksPath)
-		for _, task := range tasks {
-			fmt.Println(task)
-		}
 	case "add":
 		if flag.NArg() != 2 {
 			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")
