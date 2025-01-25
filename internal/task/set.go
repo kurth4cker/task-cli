@@ -10,20 +10,6 @@ import (
 	"os"
 )
 
-func NewSetFile(path string) (*Set, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var set Set
-	if _, err := set.ReadFrom(file); err != nil {
-		return nil, err
-	}
-	return &set, nil
-}
-
 // Set of Task's
 type Set struct {
 	tasks []Task
@@ -73,7 +59,7 @@ func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.tasks)
 }
 
-// TODO:
+// TODO: add tests
 func (s *Set) WriteFile(path string) error {
 	file, err := os.Create(path)
 	if err != nil {

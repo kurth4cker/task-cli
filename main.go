@@ -25,14 +25,7 @@ func main() {
 	}
 	switch subcmd {
 	case "list":
-		set, err := task.NewSetFile(tasksPath)
-		if err != nil {
-			if os.IsNotExist(err) {
-				set = &task.Set{}
-			} else {
-				log.Fatalf("cannoct read file: %s", err)
-			}
-		}
+		var set task.Set
 		for task := range set.All() {
 			fmt.Println(task)
 		}
@@ -42,16 +35,6 @@ func main() {
 			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")
 			os.Exit(1)
 		}
-		set, err := task.NewSetFile(tasksPath)
-		if err != nil {
-			if os.IsNotExist(err) {
-				set = &task.Set{}
-			} else {
-				log.Fatalf("error: %e", err)
-			}
-		}
-		set.AddDescription(flag.Arg(1))
-		set.WriteFile(tasksPath)
 	default:
 		log.Fatalf("unknown sub command: %q", subcmd)
 	}
