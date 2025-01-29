@@ -38,7 +38,7 @@ func (s Set) All() iter.Seq[Task] {
 // Returns JSON representation of Set as JSON Array.
 //
 // Each element is a [Task] object.
-func (s Set) MarshalJSON() ([]byte, error) {
+func (s *Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.tasks)
 }
 
@@ -87,7 +87,7 @@ func (s *Set) WriteTo(w io.Writer) (int64, error) {
 // Generate a new Id which is not found in tasks
 //
 // This Id typically used for adding a new Task to Set.
-func (s Set) newId() uint {
+func (s *Set) newId() uint {
 	var maxId uint
 	for _, task := range s.tasks {
 		if maxId < task.Id {

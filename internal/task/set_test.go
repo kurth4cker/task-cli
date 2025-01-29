@@ -92,18 +92,18 @@ func TestSetNewId(t *testing.T) {
 	})
 }
 
-func TestSetJSONMarshal(t *testing.T) {
+func TestSetMarshalJSON(t *testing.T) {
 	t.Run("should marshal single element Set", func(t *testing.T) {
 		var set Set
 		set.AddDescription("task 1")
 		set.tasks[0].Id = 0
-		data, err := json.Marshal(set)
+		data, err := set.MarshalJSON()
 		if err != nil {
-			t.Errorf("should marshal to json, failed with %e", err)
+			t.Errorf("should marshal to json, failed with %s", err)
 		}
 		var buffer bytes.Buffer
 		if err := json.Compact(&buffer, data); err != nil {
-			t.Fatalf("compacting failed: %e", err)
+			t.Fatalf("compacting failed: %s", err)
 		}
 
 		got := buffer.String()
@@ -126,8 +126,8 @@ func TestSetUnmarshalJSON(t *testing.T) {
 ]
 `)
 		var set Set
-		if err := json.Unmarshal(given, &set); err != nil {
-			t.Fatalf("unmarshal failed: %e", err)
+		if err := set.UnmarshalJSON(given); err != nil {
+			t.Fatalf("unmarshal failed: %s", err)
 		}
 		got := set.tasks[0]
 		want := Task{
