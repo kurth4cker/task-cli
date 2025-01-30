@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	tasksPath := "tasks.json"
+	_ = "tasks.json"
 
 	subcmd := "list"
 	flag.Parse()
@@ -29,7 +29,6 @@ func main() {
 		for task := range set.All() {
 			fmt.Println(task)
 		}
-		set.WriteFile(tasksPath)
 	case "add":
 		if flag.NArg() != 2 {
 			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")

@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"io"
 	"iter"
-	"os"
 )
 
 // Set of Task's
@@ -57,21 +56,6 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 
 func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.tasks)
-}
-
-// TODO: add tests
-func (s *Set) WriteFile(path string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	_, err = s.WriteTo(file)
-	if err != nil {
-		return err
-	}
-	_, err = file.WriteString("\n")
-	return err
 }
 
 // Write to given Writer as indented json encoded data.
