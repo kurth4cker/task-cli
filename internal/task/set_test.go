@@ -12,17 +12,18 @@ import (
 )
 
 func TestSetAddDescription(t *testing.T) {
-	t.Run("should add to empty Set", func(t *testing.T) {
-		var set Set
-		set.AddDescription("task 1")
-		set.AddDescription("task 2")
+	t.Run("should add correct number of elements to empty Set",
+		func(t *testing.T) {
+			var set Set
+			set.AddDescription("task 1")
+			set.AddDescription("task 2")
 
-		want := 2
-		got := len(set.tasks)
-		if got != want {
-			t.Errorf("got %d, want %d", got, want)
-		}
-	})
+			want := 2
+			got := len(set.tasks)
+			if got != want {
+				t.Errorf("got %d, want %d", got, want)
+			}
+		})
 
 	t.Run("should not change description", func(t *testing.T) {
 		var set Set
@@ -195,10 +196,6 @@ func TestSetWriteTo(t *testing.T) {
 			t.Errorf("got %s, want %s", got, want)
 		}
 	})
-}
-
-func TestSetReadFile(t *testing.T) {
-	// TODO: find a way for test this
 }
 
 func TestSetAll(t *testing.T) {
