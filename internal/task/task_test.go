@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestTask_jsonUnmarshal(t *testing.T) {
+func TestTaskJSON(t *testing.T) {
 	t.Run("should work with json.Unmarshal", func(t *testing.T) {
 		data := []byte(`
 {
