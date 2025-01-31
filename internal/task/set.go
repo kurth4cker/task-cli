@@ -59,6 +59,7 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 	return int64(len(data)), err
 }
 
+// Unmarshal a JSON encoded Task array into Set.
 func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.tasks)
 }
