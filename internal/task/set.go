@@ -29,7 +29,8 @@ func (s *Set) AddDescription(description string) {
 	s.tasks = append(s.tasks, t)
 }
 
-func (s Set) All() iter.Seq[Task] {
+// Return an iterator which iterates over all tasks.
+func (s *Set) All() iter.Seq[Task] {
 	return func(yield func(Task) bool) {
 		for _, v := range s.tasks {
 			if !yield(v) {
