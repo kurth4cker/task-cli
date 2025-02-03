@@ -14,11 +14,6 @@ type Set struct {
 	tasks []Task
 }
 
-// Add given task to the Set.
-func (s *Set) Add(t Task) {
-	s.tasks = append(s.tasks, t)
-}
-
 // Add a new Task with given description and a unique Id.
 func (s *Set) AddDescription(description string) {
 	t := Task{
