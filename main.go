@@ -11,12 +11,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"codeberg.org/kurth4cker/task-cli-go/internal/task"
 )
 
 func main() {
-	_ = "tasks.json"
+	path := "tasks.json"
 
 	subcmd := "list"
 	flag.Parse()
@@ -25,7 +23,7 @@ func main() {
 	}
 	switch subcmd {
 	case "list":
-		var set task.Set
+		set := readTaskSet(path)
 		for task := range set.All() {
 			fmt.Println(task)
 		}
