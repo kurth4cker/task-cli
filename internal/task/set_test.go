@@ -4,10 +4,7 @@
 package task
 
 import (
-	"bytes"
-	"encoding/json"
 	"slices"
-	"strings"
 	"testing"
 )
 
@@ -94,111 +91,6 @@ func TestSetNewId(t *testing.T) {
 
 		if slices.Contains(ids, newId) {
 			t.Errorf("not unique: given %v, got %d", ids, newId)
-		}
-	})
-}
-
-func TestSetMarshalJSON(t *testing.T) {
-	t.Run("should marshal single element Set", func(t *testing.T) {
-		var set Set
-		set.AddDescription("task 1")
-		set[0].Id = 0
-		data, err := set.MarshalJSON()
-		if err != nil {
-			t.Errorf("should marshal to json, failed with %s", err)
-		}
-		var buffer bytes.Buffer
-		if err := json.Compact(&buffer, data); err != nil {
-			t.Fatalf("compacting failed: %s", err)
-		}
-
-		got := buffer.String()
-		want := `[{"id":0,"description":"task 1","status":"todo"}]`
-		if got != want {
-			t.Errorf("got %q, want %q", got, want)
-		}
-	})
-}
-
-func TestSetUnmarshalJSON(t *testing.T) {
-	t.Run("should unmarshal single element Set", func(t *testing.T) {
-		given := []byte(`
-[
-	{
-		"id": 1,
-		"description": "task 1",
-		"status": "todo"
-	}
-]
-`)
-		var set Set
-		if err := set.UnmarshalJSON(given); err != nil {
-			t.Fatalf("unmarshal failed: %s", err)
-		}
-		got := set[0]
-		want := Task{
-			Id:          1,
-			Description: "task 1",
-			Status:      "todo",
-		}
-		if got != want {
-			t.Errorf("got %v, want %v, given %s",
-				got,
-				want,
-				string(given))
-		}
-	})
-}
-
-func TestSetReadFrom(t *testing.T) {
-	t.Run("should read single element Set", func(t *testing.T) {
-		reader := strings.NewReader(`
-[
-	{
-		"id": 1,
-		"description": "task 1",
-		"status": "todo"
-	}
-]
-`)
-		var set Set
-		if _, err := set.ReadFrom(reader); err != nil {
-			t.Fatalf("read failed: %e", err)
-		}
-
-		got := set[0]
-		want := Task{
-			Id:          1,
-			Description: "task 1",
-			Status:      "todo",
-		}
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-}
-
-func TestSetWriteTo(t *testing.T) {
-	t.Run("should write single element Set", func(t *testing.T) {
-		var buffer bytes.Buffer
-
-		var set Set
-		set.AddDescription("task 1")
-		set[0].Id = 0
-
-		if _, err := set.WriteTo(&buffer); err != nil {
-			t.Fatalf("WriteTo failed: %e", err)
-		}
-		data := bytes.Clone(buffer.Bytes())
-		buffer.Reset()
-		if err := json.Compact(&buffer, data); err != nil {
-			t.Fatalf("json formatting failed: %e", err)
-		}
-
-		got := string(buffer.Bytes())
-		want := `[{"id":0,"description":"task 1","status":"todo"}]`
-		if got != want {
-			t.Errorf("got %s, want %s", got, want)
 		}
 	})
 }
