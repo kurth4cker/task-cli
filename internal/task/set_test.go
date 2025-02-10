@@ -19,7 +19,7 @@ func TestSetAddDescription(t *testing.T) {
 			set.AddDescription("task 2")
 
 			want := 2
-			got := len(set.tasks)
+			got := len(set)
 			if got != want {
 				t.Errorf("got %d, want %d", got, want)
 			}
@@ -29,17 +29,19 @@ func TestSetAddDescription(t *testing.T) {
 		var set Set
 		set.AddDescription("task 1")
 
-		want := "task 1"
-		got := set.tasks[0].Description
-		if got != want {
-			t.Errorf("got %q, want %q", got, want)
+		for task := range set.All() {
+			want := "task 1"
+			got := task.Description
+			if got != want {
+				t.Errorf("got %q, want %q", got, want)
+			}
 		}
 	})
 
 	t.Run("should add with unique ids", func(t *testing.T) {
-		toIdArray := func(s Set) []uint {
+		toIdSlice := func(s Set) []uint {
 			var ids []uint
-			for _, task := range s.tasks {
+			for task := range s.All() {
 				ids = append(ids, task.Id)
 			}
 			return ids
@@ -50,7 +52,7 @@ func TestSetAddDescription(t *testing.T) {
 		set.AddDescription("task 2")
 		set.AddDescription("task 3")
 
-		ids := toIdArray(set)
+		ids := toIdSlice(set)
 		for k, id := range ids {
 			for x := k + 1; x < len(ids); x++ {
 				if ids[x] == id {
@@ -64,21 +66,24 @@ func TestSetAddDescription(t *testing.T) {
 		var set Set
 		set.AddDescription("task 1")
 
-		got := set.tasks[0].Status
-		want := "todo"
+		for task := range set.All() {
+			got := task.Status
+			want := "todo"
 
-		if got != want {
-			t.Errorf("got %q, want %q", got, want)
+			if got != want {
+				t.Errorf("got %q, want %q", got, want)
+			}
 		}
 	})
 }
 
 func TestSetNewId(t *testing.T) {
-	newSetFromIds := func(ids ...uint) (set Set) {
+	newSetFromIds := func(ids ...uint) Set {
+		var set Set
 		for _, id := range ids {
-			set.tasks = append(set.tasks, Task{Id: id})
+			set = append(set, Task{Id: id})
 		}
-		return
+		return set
 	}
 
 	t.Run("should be unique", func(t *testing.T) {
@@ -97,7 +102,7 @@ func TestSetMarshalJSON(t *testing.T) {
 	t.Run("should marshal single element Set", func(t *testing.T) {
 		var set Set
 		set.AddDescription("task 1")
-		set.tasks[0].Id = 0
+		set[0].Id = 0
 		data, err := set.MarshalJSON()
 		if err != nil {
 			t.Errorf("should marshal to json, failed with %s", err)
@@ -130,7 +135,7 @@ func TestSetUnmarshalJSON(t *testing.T) {
 		if err := set.UnmarshalJSON(given); err != nil {
 			t.Fatalf("unmarshal failed: %s", err)
 		}
-		got := set.tasks[0]
+		got := set[0]
 		want := Task{
 			Id:          1,
 			Description: "task 1",
@@ -161,7 +166,7 @@ func TestSetReadFrom(t *testing.T) {
 			t.Fatalf("read failed: %e", err)
 		}
 
-		got := set.tasks[0]
+		got := set[0]
 		want := Task{
 			Id:          1,
 			Description: "task 1",
@@ -179,7 +184,7 @@ func TestSetWriteTo(t *testing.T) {
 
 		var set Set
 		set.AddDescription("task 1")
-		set.tasks[0].Id = 0
+		set[0].Id = 0
 
 		if _, err := set.WriteTo(&buffer); err != nil {
 			t.Fatalf("WriteTo failed: %e", err)

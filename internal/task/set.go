@@ -10,24 +10,21 @@ import (
 )
 
 // Set of Task's
-type Set struct {
-	tasks []Task
-}
+type Set []Task
 
 // Add a new Task with given description and a unique Id.
 func (s *Set) AddDescription(description string) {
-	t := Task{
+	*s = append(*s, Task{
 		Id:          s.newId(),
 		Description: description,
 		Status:      "todo",
-	}
-	s.tasks = append(s.tasks, t)
+	})
 }
 
 // Return an iterator which iterates over all tasks.
 func (s *Set) All() iter.Seq[Task] {
 	return func(yield func(Task) bool) {
-		for _, v := range s.tasks {
+		for _, v := range *s {
 			if !yield(v) {
 				return
 			}
@@ -39,7 +36,7 @@ func (s *Set) All() iter.Seq[Task] {
 //
 // Each element is a [Task] object.
 func (s *Set) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.tasks)
+	return json.Marshal(s)
 }
 
 // Read from given Reader.
@@ -57,7 +54,7 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 
 // Unmarshal a JSON encoded Task array into Set.
 func (s *Set) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &s.tasks)
+	return json.Unmarshal(data, &s)
 }
 
 // Write to given Writer as indented json encoded data.
@@ -75,7 +72,7 @@ func (s *Set) WriteTo(w io.Writer) (int64, error) {
 // This Id typically used for adding a new Task to Set.
 func (s *Set) newId() uint {
 	var maxId uint
-	for _, task := range s.tasks {
+	for _, task := range *s {
 		if maxId < task.Id {
 			maxId = task.Id
 		}
