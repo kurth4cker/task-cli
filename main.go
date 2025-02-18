@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 
-	"codeberg.org/kurth4cker/task-cli-go/internal/task"
+	"codeberg.org/kurth4cker/task-cli/internal/task"
 )
 
 func main() {
