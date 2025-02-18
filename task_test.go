@@ -7,7 +7,7 @@ import (
 	"slices"
 	"testing"
 
-	"codeberg.org/kurth4cker/task-cli-go/internal/task"
+	"codeberg.org/kurth4cker/task-cli/internal/task"
 )
 
 func TestSetAddDescription(t *testing.T) {
