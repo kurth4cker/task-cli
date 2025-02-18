@@ -10,7 +10,7 @@ import (
 	"codeberg.org/kurth4cker/task-cli/internal/task"
 )
 
-func TestSetAddDescription(t *testing.T) {
+func TestSet_AddDescription(t *testing.T) {
 	want := []string{
 		"task 1",
 		"task 2",
@@ -31,7 +31,7 @@ func TestSetAddDescription(t *testing.T) {
 	}
 }
 
-func TestSetAll(t *testing.T) {
+func TestSet_All(t *testing.T) {
 	t.Run("empty task set", func(t *testing.T) {
 		want := 0
 
