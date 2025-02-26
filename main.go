@@ -6,35 +6,8 @@
 // Created for a project idea taken from roadmap.sh
 package main
 
-import (
-	"flag"
-	"fmt"
-	"log"
-	"os"
-
-	"codeberg.org/kurth4cker/task-cli/internal/task"
-)
+import "codeberg.org/kurth4cker/go-sample"
 
 func main() {
-	_ = "tasks.json"
-
-	subcmd := "list"
-	flag.Parse()
-	if flag.NArg() > 0 {
-		subcmd = flag.Arg(0)
-	}
-	switch subcmd {
-	case "list":
-		var set task.Set
-		for task := range set.All() {
-			fmt.Println(task)
-		}
-	case "add":
-		if flag.NArg() != 2 {
-			fmt.Fprintln(os.Stderr, "wrong usage. provide a description")
-			os.Exit(1)
-		}
-	default:
-		log.Fatalf("unknown sub command: %q", subcmd)
-	}
+	sample.Helloln("world")
 }
