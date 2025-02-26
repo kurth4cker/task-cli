@@ -13,12 +13,20 @@ package task
 
 import "fmt"
 
+type Status string
+
+const (
+	Done       = Status("done")
+	InProgress = Status("in-progress")
+	Todo       = Status("todo")
+)
+
 type Task struct {
 	Id          uint   `json:"id"`
 	Description string `json:"description"`
 
 	// One of "done", "todo", "in-progress"
-	Status string `json:"status"`
+	Status Status `json:"status"`
 }
 
 // Get string representation of task
