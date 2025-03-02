@@ -3,7 +3,6 @@
 
 /*
 PLAN:
-- [TODO] Check for tasks.json existence. If it is not exist, create it.
 - [TODO] tasks.json would not be an json array, it would be series of json objects
 - [TODO] we need a Task structure for json
 - [TODO] we need an Set structure
