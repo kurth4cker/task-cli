@@ -35,5 +35,8 @@ func TestEnsureFile(t *testing.T) {
 		if !info.Mode().IsRegular() {
 			t.Errorf("%s should be regular file but it is not", testFile)
 		}
+
+		// cleanup after tests
+		os.Remove(testFile)
 	})
 }
