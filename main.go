@@ -4,14 +4,6 @@
 /*
 PLAN:
 - [TODO] tasks.json would not be an json array, it would be series of json objects
-- [TODO] we need a Task structure for json
-- [TODO] we need an Set structure
-	- [TODO] Set should parse file which is a series of json Task objects
-	- [TODO] Set should lookup for objects with given Id
-	- [TODO] Methods:
-		- [TODO] Add(id)
-		- [TODO] Del(id)
-		- [TODO] Update(id)
 */
 
 /*
