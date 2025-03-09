@@ -1,23 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 // SPDX-FileCopyrightText: 2025 kurth4cker <kurth4cker@gmail.com>
 
-/*
-PLAN:
-- [TODO] tasks.json would not be an json array, it would be series of json objects
-*/
-
-/*
-Task management CLI application
-
-Created for a project idea taken from roadmap.sh
-*/
+// Task management CLI application
+//
+// Created for a project idea taken from roadmap.sh
 package main
 
-import "codeberg.org/kurth4cker/go-sample"
+import "fmt"
 
-/*
-TODO: write sub commands here
-*/
 func main() {
-	sample.Helloln("world")
+	fmt.Println("hello world")
 }
