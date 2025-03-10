@@ -15,7 +15,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    container: golang:1.23
+    container:
+      image: golang:1.23
 
     steps:
     - uses: actions/checkout@v4
