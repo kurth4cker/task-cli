@@ -25,6 +25,7 @@ jobs:
 
     - name: List
       run: |
+        whoami
         ls -l /__w/task-cli
         ls -l /__w/task-cli/task-cli
 
