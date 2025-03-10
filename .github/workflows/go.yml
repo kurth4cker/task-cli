@@ -17,14 +17,19 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    container:
-      image: golang:1.23
+
+    strategy:
+      matrix:
+        go-version: [1.23, 1.24, stable]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
 
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build ./...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...
