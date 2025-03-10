@@ -21,17 +21,20 @@ jobs:
       image: golang:1.23
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Check user
+        run: whoami  # Burada runner olması gerek
 
-    - name: List
-      run: |
-        whoami
-        ls -l /__w/task-cli
-        ls -l /__w/task-cli/task-cli
+      - uses: actions/checkout@v4
+
+      - name: List
+        run: |
+          whoami
+          ls -l /__w/task-cli
+          ls -l /__w/task-cli/task-cli
 
 
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...
