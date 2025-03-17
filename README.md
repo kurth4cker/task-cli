@@ -1,11 +1,13 @@
-# task-cli-go - Manage your tasks [WIP]
+[![Go](https://github.com/kurth4cker/task-cli/actions/workflows/go.yml/badge.svg)](https://github.com/kurth4cker/task-cli/actions/workflows/go.yml)
 
-**task-cli-go** is a simple CLI program. It is inspired by [roadmap.sh][].
+# task-cli - Manage your tasks [WIP]
+
+**task-cli** is a simple CLI program. It is inspired by [roadmap.sh][].
 
 **Note:** This program is still in Work-in-Progress. Most of functionality is
 not implemented yet.
 
-**task-cli-go** creates task database as a JSON file in running directory called
+**task-cli** creates task database as a JSON file in running directory called
 `tasks.json`.
 
 ## Usage
@@ -36,4 +38,4 @@ task-cli list in-progress
 
 ## Copying
 
-**task-cli-go** is licensed under MPL-2.0. See file COPYING for details.
+**task-cli** is licensed under MPL-2.0. See file COPYING for details.
