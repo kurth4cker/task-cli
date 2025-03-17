@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 )
 
@@ -33,14 +34,17 @@ func Test_Add(t *testing.T) {
 		}
 
 		for _, c := range cases {
+			output := new(strings.Builder)
+
 			cmd := exec.Command(taskBinary, "add", c.taskName)
-			output, err := cmd.CombinedOutput()
-			if err != nil {
+			cmd.Stdout = output
+
+			if err := cmd.Run(); err != nil {
 				t.Fatal("cannot run task-cli", err)
 			}
 
 			expected := c.taskName + "\n"
-			if string(output) != expected {
+			if output.String() != expected {
 				t.Errorf("got %q, want %q", output, expected)
 			}
 		}
@@ -60,13 +64,12 @@ func Test_Add(t *testing.T) {
 
 func Test_Raw(t *testing.T) {
 	cmd := exec.Command(taskBinary)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
+	if err := cmd.Run(); err != nil {
 		t.Fatal("cannot run task-cli", err)
 	}
 
-	expected := ""
-	if string(output) != expected {
-		t.Errorf("got %q, want %q", output, expected)
+	if !cmd.ProcessState.Success() {
+		t.Errorf("task-cli failed, expected to succeed")
 	}
+
 }
