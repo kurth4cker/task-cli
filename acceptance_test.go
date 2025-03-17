@@ -32,18 +32,16 @@ func Test_Add(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		t.Run(c.taskName, func(t *testing.T) {
-			cmd := exec.Command(taskBinary, "add", c.taskName)
-			output, err := cmd.CombinedOutput()
-			if err != nil {
-				t.Fatal("cannout run task-cli", err)
-			}
+		cmd := exec.Command(taskBinary, "add", c.taskName)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatal("cannout run task-cli", err)
+		}
 
-			expected := c.taskName + "\n"
-			if string(output) != expected {
-				t.Errorf("got %q, want %q", output, expected)
-			}
-		})
+		expected := c.taskName + "\n"
+		if string(output) != expected {
+			t.Errorf("got %q, want %q", output, expected)
+		}
 	}
 }
 
