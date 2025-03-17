@@ -52,9 +52,9 @@ func Test_Add(t *testing.T) {
 
 	t.Run("task without task name", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "add")
-		cmd.Run()
+		err := cmd.Run()
 		if !cmd.ProcessState.Exited() {
-			t.Fatal("cannot run task-cli")
+			t.Fatal("cannot run task-cli", err)
 		}
 		if cmd.ProcessState.Success() {
 			t.Error("task-cli succeded, wanted failure")
