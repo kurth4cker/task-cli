@@ -36,13 +36,24 @@ func Test_Add(t *testing.T) {
 			cmd := exec.Command(taskBinary, "add", c.taskName)
 			output, err := cmd.CombinedOutput()
 			if err != nil {
-				t.Fatal("cannout run task-cli", err)
+				t.Fatal("cannot run task-cli", err)
 			}
 
 			expected := c.taskName + "\n"
 			if string(output) != expected {
 				t.Errorf("got %q, want %q", output, expected)
 			}
+		}
+	})
+
+	t.Run("task without task name", func(t *testing.T) {
+		cmd := exec.Command(taskBinary, "add")
+		cmd.Run()
+		if !cmd.ProcessState.Exited() {
+			t.Fatal("cannot run task-cli")
+		}
+		if cmd.ProcessState.Success() {
+			t.Error("task-cli succeded, wanted failure")
 		}
 	})
 }

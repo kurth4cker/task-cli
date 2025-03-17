@@ -17,5 +17,10 @@ func main() {
 	if flag.NArg() < 1 {
 		os.Exit(0)
 	}
-	fmt.Println(flag.Arg(1))
+	if flag.Arg(0) == "add" {
+		if flag.NArg() < 2 {
+			os.Exit(1)
+		}
+		fmt.Println(flag.Arg(1))
+	}
 }
