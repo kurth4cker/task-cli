@@ -24,25 +24,27 @@ func TestMain(m *testing.M) {
 }
 
 func Test_Add(t *testing.T) {
-	cases := []struct {
-		taskName string
-	}{
-		{taskName: "Task 1"},
-		{taskName: "Task 2"},
-	}
-
-	for _, c := range cases {
-		cmd := exec.Command(taskBinary, "add", c.taskName)
-		output, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatal("cannout run task-cli", err)
+	t.Run("should print task names", func(t *testing.T) {
+		cases := []struct {
+			taskName string
+		}{
+			{taskName: "Task 1"},
+			{taskName: "Task 2"},
 		}
 
-		expected := c.taskName + "\n"
-		if string(output) != expected {
-			t.Errorf("got %q, want %q", output, expected)
+		for _, c := range cases {
+			cmd := exec.Command(taskBinary, "add", c.taskName)
+			output, err := cmd.CombinedOutput()
+			if err != nil {
+				t.Fatal("cannout run task-cli", err)
+			}
+
+			expected := c.taskName + "\n"
+			if string(output) != expected {
+				t.Errorf("got %q, want %q", output, expected)
+			}
 		}
-	}
+	})
 }
 
 func Test_Raw(t *testing.T) {
