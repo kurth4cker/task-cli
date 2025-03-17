@@ -6,8 +6,16 @@
 // Created for a project idea taken from roadmap.sh
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 func main() {
-	fmt.Println("hello world")
+	flag.Parse()
+	if flag.NArg() < 1 {
+		os.Exit(0)
+	}
+	fmt.Println(flag.Arg(1))
 }

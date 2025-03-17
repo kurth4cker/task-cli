@@ -4,28 +4,57 @@
 package main_test
 
 import (
+	"log"
 	"os"
 	"os/exec"
 	"testing"
 )
 
-func Test_Add(t *testing.T) {
-	binaryPath := "./task-cli"
+const taskBinary = "./task-cli"
 
-	buildCmd := exec.Command("go", "build", "-o", binaryPath, ".")
+func TestMain(m *testing.M) {
+	buildCmd := exec.Command("go", "build", "-o", taskBinary, ".")
 	if err := buildCmd.Run(); err != nil {
-		t.Fatal("cannot compile task-cli", err)
+		log.Fatal("cannot compile task-cli", err)
 	}
-	defer os.Remove(binaryPath)
+	code := m.Run()
+	os.Remove(taskBinary)
 
-	taskName := "Test Task"
-	cmd := exec.Command(binaryPath, "add", taskName)
+	os.Exit(code)
+}
+
+func Test_Add(t *testing.T) {
+	cases := []struct {
+		taskName string
+	}{
+		{taskName: "Task 1"},
+		{taskName: "Task 2"},
+	}
+
+	for _, c := range cases {
+		t.Run(c.taskName, func(t *testing.T) {
+			cmd := exec.Command(taskBinary, "add", c.taskName)
+			output, err := cmd.CombinedOutput()
+			if err != nil {
+				t.Fatal("cannout run task-cli", err)
+			}
+
+			expected := c.taskName + "\n"
+			if string(output) != expected {
+				t.Errorf("got %q, want %q", output, expected)
+			}
+		})
+	}
+}
+
+func Test_Raw(t *testing.T) {
+	cmd := exec.Command(taskBinary)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		t.Fatal("cannout run task-cli", err)
+		t.Fatal("cannot run task-cli", err)
 	}
 
-	expected := taskName + "\n"
+	expected := ""
 	if string(output) != expected {
 		t.Errorf("got %q, want %q", output, expected)
 	}
