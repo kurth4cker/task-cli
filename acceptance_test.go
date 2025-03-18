@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
+
+	"codeberg.org/kurth4cker/task-cli/internal/assert"
 )
 
 const taskBinary = "./task-cli"
@@ -38,7 +40,7 @@ func Test_Add(t *testing.T) {
 
 			cmd := exec.Command(taskBinary, "add", c.taskName)
 			cmd.Stdout = output
-			assertCmdRun(t, cmd)
+			assert.CmdRun(t, cmd)
 
 			expected := c.taskName + "\n"
 			if output.String() != expected {
@@ -49,7 +51,7 @@ func Test_Add(t *testing.T) {
 
 	t.Run("task without task name", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "add")
-		assertCmdRun(t, cmd)
+		assert.CmdRun(t, cmd)
 		if cmd.ProcessState.Success() {
 			t.Error("task-cli succeded, wanted failure")
 		}
@@ -59,7 +61,7 @@ func Test_Add(t *testing.T) {
 func Test_List(t *testing.T) {
 	t.Run("should fail with unknown arguments", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "list", "unknown-status")
-		assertCmdRun(t, cmd)
+		assert.CmdRun(t, cmd)
 		if cmd.ProcessState.Success() {
 			t.Error("'task-cli succeeded, expected to fail")
 		}
@@ -67,7 +69,7 @@ func Test_List(t *testing.T) {
 
 	t.Run("should not fail without arguments", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "list")
-		assertCmdRun(t, cmd)
+		assert.CmdRun(t, cmd)
 		if !cmd.ProcessState.Success() {
 			t.Error("'task-cli list' failed, expected to succeed")
 		}
@@ -78,7 +80,7 @@ func Test_List(t *testing.T) {
 		for _, status := range statuses {
 			t.Run(status, func(t *testing.T) {
 				cmd := exec.Command(taskBinary, "list", status)
-				assertCmdRun(t, cmd)
+				assert.CmdRun(t, cmd)
 				if !cmd.ProcessState.Success() {
 					t.Errorf("'task-cli list %s' failed, expected to succeed", status)
 				}
@@ -89,22 +91,9 @@ func Test_List(t *testing.T) {
 
 func Test_Raw(t *testing.T) {
 	cmd := exec.Command(taskBinary)
-	assertCmdRun(t, cmd)
+	assert.CmdRun(t, cmd)
 
 	if !cmd.ProcessState.Success() {
 		t.Errorf("task-cli failed, expected to succeed")
-	}
-}
-
-func assertCmdRun(t testing.TB, cmd *exec.Cmd) {
-	t.Helper()
-	err := cmd.Run()
-	if err != nil {
-		switch err.(type) {
-		case *exec.ExitError:
-			return
-		default:
-			t.Fatalf("cannot run %q: %s", cmd, err)
-		}
 	}
 }
