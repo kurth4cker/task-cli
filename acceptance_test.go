@@ -62,6 +62,46 @@ func Test_Add(t *testing.T) {
 	})
 }
 
+func Test_List(t *testing.T) {
+	t.Run("should fail with unknown arguments", func(t *testing.T) {
+		cmd := exec.Command(taskBinary, "list", "unknown-status")
+		err := cmd.Run()
+		if !cmd.ProcessState.Exited() {
+			t.Fatal("cannot run task-cli", err)
+		}
+		if cmd.ProcessState.Success() {
+			t.Error("'task-cli succeeded, expected to fail")
+		}
+	})
+
+	t.Run("should not fail without arguments", func(t *testing.T) {
+		cmd := exec.Command(taskBinary, "list")
+		err := cmd.Run()
+		if !cmd.ProcessState.Exited() {
+			t.Fatal("cannot run task-cli", err)
+		}
+		if !cmd.ProcessState.Success() {
+			t.Error("'task-cli list' failed, expected to succeed")
+		}
+	})
+
+	t.Run("should not fail with known statuses", func(t *testing.T) {
+		statuses := []string{"done", "todo", "in-progress"}
+		for _, status := range statuses {
+			t.Run(status, func(t *testing.T) {
+				cmd := exec.Command(taskBinary, "list", status)
+				err := cmd.Run()
+				if !cmd.ProcessState.Exited() {
+					t.Fatal("cannot run task-cli", err)
+				}
+				if !cmd.ProcessState.Success() {
+					t.Errorf("'task-cli list %s' failed, expected to succeed", status)
+				}
+			})
+		}
+	})
+}
+
 func Test_Raw(t *testing.T) {
 	cmd := exec.Command(taskBinary)
 	if err := cmd.Run(); err != nil {

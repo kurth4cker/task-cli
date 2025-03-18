@@ -10,6 +10,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"slices"
 )
 
 func main() {
@@ -17,10 +18,23 @@ func main() {
 	if flag.NArg() < 1 {
 		os.Exit(0)
 	}
-	if flag.Arg(0) == "add" {
+
+	switch flag.Arg(0) {
+	case "add":
 		if flag.NArg() < 2 {
 			os.Exit(1)
 		}
 		fmt.Println(flag.Arg(1))
+	case "list":
+		if flag.NArg() < 2 {
+			os.Exit(0)
+		}
+		args := flag.Args()[1:]
+		statuses := []string{"done", "todo", "in-progress"}
+		for _, arg := range args {
+			if !slices.Contains(statuses, arg) {
+				os.Exit(1)
+			}
+		}
 	}
 }
