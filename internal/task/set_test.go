@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"codeberg.org/kurth4cker/task-cli/internal/task"
+	"github.com/kurth4cker/task-cli/internal/task"
 )
 
 /*

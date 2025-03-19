@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"codeberg.org/kurth4cker/task-cli/internal/data"
+	"github.com/kurth4cker/task-cli/internal/data"
 )
 
 func TestEnsureFile(t *testing.T) {

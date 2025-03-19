@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"codeberg.org/kurth4cker/task-cli/internal/assert"
+	"github.com/kurth4cker/task-cli/internal/assert"
 )
 
 const taskBinary = "./task-cli"
