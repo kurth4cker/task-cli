@@ -51,7 +51,6 @@ func Test_Add(t *testing.T) {
 		}
 	})
 
-	// TODO: print added task id
 	t.Run("should print task id", func(t *testing.T) {
 		output := new(strings.Builder)
 
