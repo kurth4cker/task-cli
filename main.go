@@ -15,23 +15,23 @@ import (
 
 func main() {
 	flag.Parse()
-	if flag.NArg() < 1 {
-		os.Exit(0)
+	args := flag.Args()
+	if len(args) < 1 {
+		args = append(args, "list")
 	}
 
-	switch flag.Arg(0) {
+	switch args[0] {
 	case "add":
-		if flag.NArg() < 2 {
+		if len(args) < 2 {
 			os.Exit(1)
 		}
-		fmt.Println(flag.Arg(1))
+		fmt.Println(args[1])
 	case "list":
-		if flag.NArg() < 2 {
+		if len(args) < 2 {
 			os.Exit(0)
 		}
-		args := flag.Args()[1:]
-		statuses := []string{"done", "todo", "in-progress"}
-		for _, arg := range args {
+		for _, arg := range args[1:] {
+			statuses := []string{"done", "todo", "in-progress"}
 			if !slices.Contains(statuses, arg) {
 				os.Exit(1)
 			}
