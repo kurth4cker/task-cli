@@ -11,17 +11,6 @@ import (
 	"github.com/kurth4cker/task-cli/internal/task"
 )
 
-/*
-- [TODO] we need an TaskSet structure
-	- [TODO] Set should parse file which is a series of json Task objects
-	- [TODO] Set should lookup for objects with given Id
-	- [TODO] Methods:
-		- [IN-PROGRESS] Add(description)
-		- [TODO] Del(id)
-		- [TODO] Update(id)
-
-*/
-
 func TestSet_Add(t *testing.T) {
 	freshSet := func(count int) *task.Set {
 		set := new(task.Set)
