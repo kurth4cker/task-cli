@@ -10,8 +10,7 @@ import (
 
 func CmdRun(t testing.TB, cmd *exec.Cmd) {
 	t.Helper()
-	err := cmd.Run()
-	if err != nil {
+	if err := cmd.Run(); err != nil {
 		switch err.(type) {
 		case *exec.ExitError:
 			return
