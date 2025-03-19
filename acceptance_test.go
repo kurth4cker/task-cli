@@ -27,35 +27,45 @@ func TestMain(m *testing.M) {
 }
 
 func Test_Add(t *testing.T) {
-	t.Run("should print task names", func(t *testing.T) {
+	t.Run("should print task descriptions", func(t *testing.T) {
 		cases := []struct {
-			taskName string
+			taskDescription string
 		}{
-			{taskName: "Task 1"},
-			{taskName: "Task 2"},
+			{taskDescription: "Task 1"},
+			{taskDescription: "Task 2"},
 		}
 
 		for _, c := range cases {
 			output := new(strings.Builder)
 
-			cmd := exec.Command(taskBinary, "add", c.taskName)
+			cmd := exec.Command(taskBinary, "add", c.taskDescription)
 			cmd.Stdout = output
 			assert.CmdRun(t, cmd)
 
-			expected := c.taskName + "\n"
+			expected := c.taskDescription + "\n"
 			if output.String() != expected {
 				t.Errorf("got %q, want %q", output, expected)
 			}
 		}
 	})
 
-	t.Run("task without task name", func(t *testing.T) {
+	t.Run("should not fail with task descriptions", func(t *testing.T) {
+		cmd := exec.Command(taskBinary, "add", "Task 1")
+		assert.CmdRun(t, cmd)
+		if !cmd.ProcessState.Success() {
+			t.Errorf("%q failed, expected to succeed", cmd)
+		}
+	})
+
+	t.Run("should fail if no task description", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "add")
 		assert.CmdRun(t, cmd)
 		if cmd.ProcessState.Success() {
-			t.Error("task-cli succeded, wanted failure")
+			t.Errorf("%q succeded, expected to fail", cmd)
 		}
 	})
+
+	// TODO: print added task id
 }
 
 func Test_List(t *testing.T) {
@@ -63,7 +73,7 @@ func Test_List(t *testing.T) {
 		cmd := exec.Command(taskBinary, "list", "unknown-status")
 		assert.CmdRun(t, cmd)
 		if cmd.ProcessState.Success() {
-			t.Error("'task-cli succeeded, expected to fail")
+			t.Errorf("%q succeeded, expected to fail", cmd)
 		}
 	})
 
@@ -71,7 +81,7 @@ func Test_List(t *testing.T) {
 		cmd := exec.Command(taskBinary, "list")
 		assert.CmdRun(t, cmd)
 		if !cmd.ProcessState.Success() {
-			t.Error("'task-cli list' failed, expected to succeed")
+			t.Errorf("%q failed, expected to succeed", cmd)
 		}
 	})
 
@@ -82,7 +92,7 @@ func Test_List(t *testing.T) {
 				cmd := exec.Command(taskBinary, "list", status)
 				assert.CmdRun(t, cmd)
 				if !cmd.ProcessState.Success() {
-					t.Errorf("'task-cli list %s' failed, expected to succeed", status)
+					t.Errorf("%q failed, expected to succeed", cmd)
 				}
 			})
 		}
@@ -94,6 +104,6 @@ func Test_Raw(t *testing.T) {
 	assert.CmdRun(t, cmd)
 
 	if !cmd.ProcessState.Success() {
-		t.Errorf("task-cli failed, expected to succeed")
+		t.Errorf("%q failed, expected to succeed", cmd)
 	}
 }
