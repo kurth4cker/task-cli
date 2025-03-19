@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"slices"
 	"strings"
 	"testing"
 
@@ -42,10 +43,26 @@ func Test_Add(t *testing.T) {
 			cmd.Stdout = output
 			assert.CmdRun(t, cmd)
 
-			expected := c.taskDescription + "\n"
-			if output.String() != expected {
-				t.Errorf("got %q, want %q", output, expected)
+			_, got, _ := strings.Cut(output.String(), ": ")
+			want := c.taskDescription
+			if got != want {
+				t.Errorf("got %q, want %q", got, want)
 			}
+		}
+	})
+
+	// TODO: print added task id
+	t.Run("should print task id", func(t *testing.T) {
+		output := new(strings.Builder)
+
+		cmd := exec.Command(taskBinary, "add", "Task 1")
+		cmd.Stdout = output
+		assert.CmdRun(t, cmd)
+
+		got := strings.Split(output.String(), ": ")[0]
+		anyWant := []string{"0", "1"}
+		if !slices.Contains(anyWant, got) {
+			t.Errorf("%q does not match any of %v", got, anyWant)
 		}
 	})
 
@@ -64,8 +81,6 @@ func Test_Add(t *testing.T) {
 			t.Errorf("%q succeded, expected to fail", cmd)
 		}
 	})
-
-	// TODO: print added task id
 }
 
 func Test_List(t *testing.T) {
