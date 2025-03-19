@@ -100,7 +100,7 @@ func Test_List(t *testing.T) {
 		}
 	})
 
-	t.Run("should not fail with known statuses", func(t *testing.T) {
+	t.Run("should not fail with known status", func(t *testing.T) {
 		statuses := []string{"done", "todo", "in-progress"}
 		for _, status := range statuses {
 			t.Run(status, func(t *testing.T) {
