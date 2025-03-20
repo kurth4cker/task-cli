@@ -44,6 +44,7 @@ func Test_Add(t *testing.T) {
 			assert.CmdRun(t, cmd)
 
 			_, got, _ := strings.Cut(output.String(), ": ")
+			got = strings.TrimSpace(got)
 			want := c.taskDescription
 			if got != want {
 				t.Errorf("got %q, want %q", got, want)
@@ -62,6 +63,19 @@ func Test_Add(t *testing.T) {
 		anyWant := []string{"0", "1"}
 		if !slices.Contains(anyWant, got) {
 			t.Errorf("%q does not match any of %v", got, anyWant)
+		}
+	})
+
+	t.Run("should add newline at end", func(t *testing.T) {
+		output := new(strings.Builder)
+
+		cmd := exec.Command(taskBinary, "add", "Task 1")
+		cmd.Stdout = output
+		assert.CmdRun(t, cmd)
+
+		ok := strings.HasSuffix(output.String(), "\n")
+		if !ok {
+			t.Errorf("%q: wanted newline but not get one", cmd)
 		}
 	})
 

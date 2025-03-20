@@ -25,7 +25,7 @@ func main() {
 		if len(args) < 2 {
 			os.Exit(1)
 		}
-		fmt.Printf("0: %s", args[1])
+		fmt.Printf("0: %s\n", args[1])
 	case "list":
 		if len(args) < 2 {
 			os.Exit(0)
