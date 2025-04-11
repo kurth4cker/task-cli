@@ -4,6 +4,7 @@
 package main_test
 
 import (
+	"bytes"
 	"log"
 	"os"
 	"os/exec"
@@ -123,6 +124,30 @@ func Test_List(t *testing.T) {
 					t.Errorf("%q failed, expected to succeed", cmd)
 				}
 			})
+		}
+	})
+
+	t.Run("should save correct number of tasks", func(t *testing.T) {
+		taskNames := []string{"Task 1", "Task 2", "Task 3"}
+		for _, taskName := range taskNames {
+			assert.CmdRun(t, exec.Command(taskBinary, "add", taskName))
+		}
+
+		buffer := new(bytes.Buffer)
+		cmd := exec.Command(taskBinary, "list")
+		cmd.Stdout = buffer
+		assert.CmdRun(t, cmd)
+
+		want := 3
+		got := 0
+		for _, ch := range buffer.String() {
+			if ch == '\n' {
+				got++
+			}
+		}
+
+		if got != want {
+			t.Errorf("got %d lines, want %d", got, want)
 		}
 	})
 }
