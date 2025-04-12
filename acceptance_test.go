@@ -30,6 +30,7 @@ func TestMain(m *testing.M) {
 
 func Test_Add(t *testing.T) {
 	t.Run("should print task descriptions", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		cases := []struct {
 			taskDescription string
 		}{
@@ -54,6 +55,7 @@ func Test_Add(t *testing.T) {
 	})
 
 	t.Run("should print task id", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		output := new(strings.Builder)
 
 		cmd := exec.Command(taskBinary, "add", "Task 1")
@@ -68,6 +70,7 @@ func Test_Add(t *testing.T) {
 	})
 
 	t.Run("should add newline at end", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		output := new(strings.Builder)
 
 		cmd := exec.Command(taskBinary, "add", "Task 1")
@@ -81,6 +84,7 @@ func Test_Add(t *testing.T) {
 	})
 
 	t.Run("should not fail with task descriptions", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		cmd := exec.Command(taskBinary, "add", "Task 1")
 		assert.CmdRun(t, cmd)
 		if !cmd.ProcessState.Success() {
@@ -89,6 +93,7 @@ func Test_Add(t *testing.T) {
 	})
 
 	t.Run("should fail if no task description", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		cmd := exec.Command(taskBinary, "add")
 		assert.CmdRun(t, cmd)
 		if cmd.ProcessState.Success() {
@@ -98,6 +103,8 @@ func Test_Add(t *testing.T) {
 }
 
 func Test_List(t *testing.T) {
+	t.Cleanup(cleanDatabase)
+
 	t.Run("should fail with unknown arguments", func(t *testing.T) {
 		cmd := exec.Command(taskBinary, "list", "unknown-status")
 		assert.CmdRun(t, cmd)
@@ -128,6 +135,7 @@ func Test_List(t *testing.T) {
 	})
 
 	t.Run("should save correct number of tasks", func(t *testing.T) {
+		t.Cleanup(cleanDatabase)
 		taskNames := []string{"Task 1", "Task 2", "Task 3"}
 		for _, taskName := range taskNames {
 			assert.CmdRun(t, exec.Command(taskBinary, "add", taskName))
@@ -153,10 +161,15 @@ func Test_List(t *testing.T) {
 }
 
 func Test_Raw(t *testing.T) {
+	t.Cleanup(cleanDatabase)
 	cmd := exec.Command(taskBinary)
 	assert.CmdRun(t, cmd)
 
 	if !cmd.ProcessState.Success() {
 		t.Errorf("%q failed, expected to succeed", cmd)
 	}
+}
+
+func cleanDatabase() {
+	os.Remove("database.txt")
 }
