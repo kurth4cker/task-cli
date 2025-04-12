@@ -4,48 +4,43 @@
 package task
 
 type Set struct {
-	tasks []task
+	elements []Element
 }
 
 func (s *Set) Add(description string) {
-	task := task{
-		id:          s.newId(),
-		description: description,
+	task := Element{
+		Id:          s.newId(),
+		Description: description,
 	}
-	s.tasks = append(s.tasks, task)
+	s.elements = append(s.elements, task)
 }
 
 func (s *Set) Descriptions() []string {
 	descriptions := make([]string, 0, s.Len())
-	for _, task := range s.tasks {
-		descriptions = append(descriptions, task.description)
+	for _, elem := range s.elements {
+		descriptions = append(descriptions, elem.Description)
 	}
 	return descriptions
 }
 
 func (s *Set) Ids() []uint {
 	ids := make([]uint, 0, s.Len())
-	for _, task := range s.tasks {
-		ids = append(ids, task.id)
+	for _, elem := range s.elements {
+		ids = append(ids, elem.Id)
 	}
 	return ids
 }
 
 func (s *Set) Len() int {
-	return len(s.tasks)
+	return len(s.elements)
 }
 
 func (s *Set) newId() uint {
 	var id uint
-	for _, task := range s.tasks {
-		if id == task.id {
+	for _, elem := range s.elements {
+		if id == elem.Id {
 			id++
 		}
 	}
 	return id
-}
-
-type task struct {
-	id          uint
-	description string
 }
