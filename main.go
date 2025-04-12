@@ -7,12 +7,11 @@
 package main
 
 import (
-	"flag"
+	"os"
 )
 
 func main() {
-	flag.Parse()
-	args := flag.Args()
+	args := os.Args[1:]
 	if len(args) < 1 {
 		args = append(args, "list")
 	}
