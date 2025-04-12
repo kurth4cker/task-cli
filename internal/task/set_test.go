@@ -65,3 +65,41 @@ func TestSet_Add(t *testing.T) {
 		}
 	})
 }
+
+func TestSet_All(t *testing.T) {
+	t.Run("should return correct number of elements", func(t *testing.T) {
+		tasks := new(task.Set)
+		for i := range 15 {
+			tasks.Add(fmt.Sprintf("Task %d", i))
+		}
+
+		want := 15
+		got := 0
+		for range tasks.All() {
+			got++
+		}
+
+		if got != want {
+			t.Errorf("got %d elements, want %d", got, want)
+		}
+	})
+
+	t.Run("should return all descriptions", func(t *testing.T) {
+		tasks := new(task.Set)
+		tasks.Add("Task 1")
+		tasks.Add("Task 2")
+		tasks.Add("Task 3")
+
+		want := tasks.Descriptions()
+		slices.Sort(want)
+		got := []string{}
+		for elem := range tasks.All() {
+			got = append(got, elem.Description)
+		}
+		slices.Sort(got)
+
+		if !slices.Equal(got, want) {
+			t.Errorf("got descriptions %v, want %v", got, want)
+		}
+	})
+}

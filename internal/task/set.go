@@ -3,6 +3,8 @@
 
 package task
 
+import "iter"
+
 type Set struct {
 	elements []Element
 }
@@ -13,6 +15,16 @@ func (s *Set) Add(description string) {
 		Description: description,
 	}
 	s.elements = append(s.elements, task)
+}
+
+func (s *Set) All() iter.Seq[Element] {
+	return func(yield func(Element) bool) {
+		for _, elem := range s.elements {
+			if !yield(elem) {
+				break
+			}
+		}
+	}
 }
 
 func (s *Set) Descriptions() []string {
