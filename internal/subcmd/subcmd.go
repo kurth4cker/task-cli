@@ -1,4 +1,4 @@
-package main
+package subcmd
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-func add(args []string) {
+func Add(args []string) {
 	if len(args) != 1 {
 		fmt.Fprintln(os.Stderr, "usage: add <task description>")
 		os.Exit(1)
@@ -23,7 +23,7 @@ func add(args []string) {
 	fmt.Printf("0: %s\n", args[0])
 }
 
-func list(args []string) {
+func List(args []string) {
 	if len(args) < 1 {
 		file, err := os.OpenFile("database.txt", os.O_RDONLY|os.O_CREATE, 0666)
 		if err != nil {

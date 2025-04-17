@@ -8,6 +8,8 @@ package main
 
 import (
 	"os"
+
+	"github.com/kurth4cker/task-cli/internal/subcmd"
 )
 
 func main() {
@@ -18,8 +20,8 @@ func main() {
 
 	switch args[0] {
 	case "add":
-		add(args[1:])
+		subcmd.Add(args[1:])
 	case "list":
-		list(args[1:])
+		subcmd.List(args[1:])
 	}
 }
