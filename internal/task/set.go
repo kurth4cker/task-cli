@@ -3,7 +3,10 @@
 
 package task
 
-import "iter"
+import (
+	"encoding/json"
+	"iter"
+)
 
 type Set struct {
 	elements []Element
@@ -49,6 +52,14 @@ func (s *Set) Len() int {
 
 func (s *Set) AddElement(elem Element) {
 	s.elements = append(s.elements, elem)
+}
+
+func (s *Set) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&s.elements)
+}
+
+func (s *Set) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &s.elements)
 }
 
 func (s *Set) newId() uint {

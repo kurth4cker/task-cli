@@ -4,6 +4,7 @@
 package task_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"slices"
 	"testing"
@@ -121,4 +122,59 @@ func TestSet_AddElement(t *testing.T) {
 			t.Errorf("got length %v, want %v", got, want)
 		}
 	}
+}
+
+func TestSet_JSON(t *testing.T) {
+	tasks := new(task.Set)
+	tasks.Add("task 1")
+	tasks.Add("task 2")
+	tasks.Add("task 3")
+
+	var want task.Set
+	for elem := range tasks.All() {
+		want.AddElement(elem)
+	}
+
+	var got task.Set
+	{
+		tmp, err := json.Marshal(&tasks)
+		if err != nil {
+			t.Fatalf("unexpected marshal error: %s", err)
+		}
+		if err := json.Unmarshal(tmp, &got); err != nil {
+			t.Fatalf("unexpected unmarshal error: %s", err)
+		}
+	}
+
+	{
+		want := slices.Collect(want.All())
+		got := slices.Collect(got.All())
+		if !unorderedEqual(got, want) {
+			t.Errorf("got elements %+v, want %+v", got, want)
+		}
+	}
+}
+
+func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	tmp := slices.Clone(s1)
+	for _, elem := range s2 {
+		idx := slices.Index(tmp, elem)
+		if idx == -1 {
+			return false
+		}
+		tmp = remove(tmp, idx)
+	}
+	return true
+}
+
+func remove[S ~[]E, E any](s S, idx int) S {
+	if len(s) <= idx {
+		return s
+	}
+	slice := slices.Clone(s[:idx])
+	return append(slice, s[idx+1:]...)
 }
