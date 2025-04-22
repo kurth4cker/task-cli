@@ -47,6 +47,10 @@ func (s *Set) Len() int {
 	return len(s.elements)
 }
 
+func (s *Set) AddElement(elem Element) {
+	s.elements = append(s.elements, elem)
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {

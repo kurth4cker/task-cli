@@ -103,3 +103,22 @@ func TestSet_All(t *testing.T) {
 		}
 	})
 }
+
+func TestSet_AddElement(t *testing.T) {
+	tasks := new(task.Set)
+	length := 3
+	for i := range length {
+		tasks.AddElement(task.Element{
+			Id:          uint(i),
+			Description: fmt.Sprint("task", i),
+		})
+	}
+
+	{
+		want := length
+		got := tasks.Len()
+		if got != want {
+			t.Errorf("got length %v, want %v", got, want)
+		}
+	}
+}
