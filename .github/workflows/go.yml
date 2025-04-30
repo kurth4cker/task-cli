@@ -8,10 +8,10 @@ permissions:
 on:
   push:
     branches:
-      - v0
+      - "v0"
   pull_request:
     branches:
-      - v0 
+      - "v0"
 
 jobs:
 
@@ -23,7 +23,6 @@ jobs:
         go-version:
           - '1.23'
           - '1.24'
-          - 'stable'
 
     steps:
       - uses: actions/checkout@v4
