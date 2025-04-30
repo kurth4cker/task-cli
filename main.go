@@ -11,9 +11,11 @@ import (
 )
 
 func add(args []string) {
+	// TODO(#5): implement add
 }
 
 func list(args []string) {
+	// TODO(#6): implement list
 }
 
 func main() {
