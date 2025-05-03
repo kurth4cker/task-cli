@@ -30,14 +30,6 @@ func (s *Set) All() iter.Seq[Element] {
 	}
 }
 
-func (s *Set) Descriptions() []string {
-	descriptions := make([]string, 0, s.Len())
-	for _, elem := range s.elements {
-		descriptions = append(descriptions, elem.Description)
-	}
-	return descriptions
-}
-
 func (s *Set) Ids() []uint {
 	ids := make([]uint, 0, s.Len())
 	for _, elem := range s.elements {
