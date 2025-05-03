@@ -66,9 +66,31 @@ func add(args []string) {
 }
 
 func list(args []string) {
-	// TODO(#6): implement list
+	if len(args) > 1 {
+		fmt.Fprintf(os.Stderr, "invalid number of arguments. usage:\n")
+		fmt.Fprintf(os.Stderr, "    list [status]\n")
+		os.Exit(1)
+	}
+
+	data, err := os.ReadFile(taskFileName)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	set := new(task.Set)
+	err = set.UnmarshalJSON(data)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot parse %s: %s\n", taskFileName, err)
+		os.Exit(1)
+	}
+
+	for elem := range set.All() {
+		fmt.Printf("%v: %s\n", elem.Id, elem.Description)
+	}
 }
 
+// TODO: add status support
 func main() {
 	args := os.Args[1:]
 	if len(args) < 1 {
