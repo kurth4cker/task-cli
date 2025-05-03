@@ -33,7 +33,7 @@ func TestSet_Add(t *testing.T) {
 
 	t.Run("correct and ordered descriptions", func(t *testing.T) {
 		set := freshSet(3)
-		got := set.Descriptions()
+		got := getDescriptions(set)
 		want := []string{"task 1", "task 2", "task 3"}
 		if !slices.Equal(got, want) {
 			t.Errorf("got %+v, want %+v", got, want)
@@ -91,7 +91,7 @@ func TestSet_All(t *testing.T) {
 		tasks.Add("Task 2")
 		tasks.Add("Task 3")
 
-		want := tasks.Descriptions()
+		want := getDescriptions(tasks);
 		slices.Sort(want)
 		got := []string{}
 		for elem := range tasks.All() {
@@ -177,4 +177,12 @@ func remove[S ~[]E, E any](s S, idx int) S {
 	}
 	slice := slices.Clone(s[:idx])
 	return append(slice, s[idx+1:]...)
+}
+
+func getDescriptions(tasks *task.Set) []string {
+	descriptions := make([]string, 0, tasks.Len())
+	for elem := range tasks.All() {
+		descriptions = append(descriptions, elem.Description)
+	}
+	return descriptions
 }
