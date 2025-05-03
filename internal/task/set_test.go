@@ -41,7 +41,7 @@ func TestSet_Add(t *testing.T) {
 	})
 
 	t.Run("correct number of ids", func(t *testing.T) {
-		ids := freshSet(3).Ids()
+		ids := getIds(freshSet(3))
 		got := len(ids)
 		want := 3
 		if got != want {
@@ -60,7 +60,7 @@ func TestSet_Add(t *testing.T) {
 		}
 
 		set := freshSet(3)
-		ids := set.Ids()
+		ids := getIds(set)
 		if !isUniq(ids) {
 			t.Errorf("Ids should be unique, but %+v is not unique", ids)
 		}
@@ -185,4 +185,12 @@ func getDescriptions(tasks *task.Set) []string {
 		descriptions = append(descriptions, elem.Description)
 	}
 	return descriptions
+}
+
+func getIds(s *task.Set) []uint {
+	ids := make([]uint, 0, s.Len())
+	for elem := range s.All() {
+		ids = append(ids, elem.Id)
+	}
+	return ids
 }
