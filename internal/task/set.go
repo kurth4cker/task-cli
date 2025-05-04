@@ -47,6 +47,17 @@ func (s *Set) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &s.elements)
 }
 
+func (s *Set) Get(id uint) (Element, bool) {
+	var last Element
+	for elem := range s.All() {
+		if elem.Id == id {
+			return elem, true
+		}
+		last = elem
+	}
+	return last, false
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {
