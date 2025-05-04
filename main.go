@@ -104,7 +104,7 @@ func mark(status task.Status, args []string) {
 		id = uint(id64)
 	}
 
-	// TODO: remove code duplicate
+	// TODO(#23): remove code duplicate
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -129,7 +129,7 @@ func mark(status task.Status, args []string) {
 		}
 	}
 
-	// TODO: check for errors
+	// TODO(#24): check for errors
 	set.Mark(id, status)
 
 	data, err = set.MarshalJSON()
