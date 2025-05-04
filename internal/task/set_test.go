@@ -4,6 +4,7 @@
 package task_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"slices"
@@ -219,6 +220,27 @@ func TestSet_Mark(t *testing.T) {
 	want := task.Done
 	if got != want {
 		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func TestSet_ReadFrom(t *testing.T) {
+	s1 := new(task.Set)
+	s1.Add("Task 1")
+	s1.Add("Task 2")
+
+	data, err := s1.MarshalJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	buf := bytes.NewBuffer(data)
+	s2 := new(task.Set)
+	s2.ReadFrom(buf)
+
+	got := slices.Collect(s2.All())
+	want := slices.Collect(s1.All())
+	if !unorderedEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }
 

@@ -5,6 +5,7 @@ package task
 
 import (
 	"encoding/json"
+	"io"
 	"iter"
 )
 
@@ -64,6 +65,18 @@ func (s *Set) Mark(id uint, status Status) {
 			s.elements[i].Status = status
 		}
 	}
+}
+
+func (s *Set) ReadFrom(r io.Reader) (int64, error) {
+	// TODO: return correct read bytes
+	data, err := io.ReadAll(r)
+	if err != nil {
+		return 0, err
+	}
+	if err := s.UnmarshalJSON(data); err != nil {
+		return 0, err
+	}
+	return 0, nil
 }
 
 func (s *Set) newId() uint {
