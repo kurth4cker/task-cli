@@ -69,7 +69,7 @@ func (s *Set) Mark(id uint, status Status) {
 }
 
 func (s *Set) ReadFrom(r io.Reader) (int64, error) {
-	// TODO: return correct read bytes
+	// TODO(#35): return correct read bytes
 	data, err := io.ReadAll(r)
 	if err != nil {
 		return 0, err
