@@ -12,7 +12,7 @@ type Element struct {
 type Status string
 
 const (
-	Todo Status = "todo"
-	InProgress = "in-progress"
-	Done = "done"
+	Todo       Status = "todo"
+	InProgress Status= "in-progress"
+	Done       Status = "done"
 )
