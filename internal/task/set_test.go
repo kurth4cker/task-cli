@@ -166,6 +166,41 @@ func TestSet_JSON(t *testing.T) {
 	}
 }
 
+func TestSet_Get(t *testing.T) {
+	s := new(task.Set)
+	s.AddElement(task.Element{
+		Id: uint(1),
+		Status: task.Done,
+	})
+	s.AddElement(task.Element{Id: uint(2)})
+
+	t.Run("found element", func(t *testing.T) {
+		elem, ok := s.Get(1)
+		if !ok {
+			t.Fatalf("cannot found element")
+		}
+
+		got := elem.Id
+		want := uint(1)
+		if got != want {
+			t.Errorf("got %v, want %v", got, want);
+		}
+	})
+
+	t.Run("non-exist element", func(t *testing.T) {
+		elem, ok := s.Get(99)
+		if ok {
+			t.Fatalf("found element")
+		}
+
+		got := elem.Id
+		want := uint(2)
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
 func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false
