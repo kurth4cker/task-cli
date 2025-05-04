@@ -67,10 +67,22 @@ func add(args []string) {
 }
 
 func list(args []string) {
-	if len(args) > 1 {
+	const all task.Status = "all"
+	if len(args) > 2 {
 		fmt.Fprintf(os.Stderr, "invalid number of arguments. usage:\n")
 		fmt.Fprintf(os.Stderr, "    list [status]\n")
 		os.Exit(1)
+	}
+	var status task.Status
+	if len(args) == 1 {
+		switch (args[0]) {
+		case "todo":
+			status = task.Todo
+		case "in-progress":
+			status = task.InProgress
+		case "done":
+			status = task.Done
+		}
 	}
 
 	data, err := os.ReadFile(taskFileName)
@@ -86,8 +98,16 @@ func list(args []string) {
 		os.Exit(1)
 	}
 
-	for elem := range set.All() {
-		fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
+	if status == all {
+		for elem := range set.All() {
+			fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
+		}
+	} else {
+		for elem := range set.All() {
+			if elem.Status == status {
+				fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
+			}
+		}
 	}
 }
 
