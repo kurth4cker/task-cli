@@ -58,6 +58,14 @@ func (s *Set) Get(id uint) (Element, bool) {
 	return last, false
 }
 
+func (s *Set) Mark(id uint, status Status) {
+	for i := range s.elements {
+		if s.elements[i].Id == id {
+			s.elements[i].Status = status
+		}
+	}
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {
