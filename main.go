@@ -86,7 +86,7 @@ func list(args []string) {
 	}
 
 	for elem := range set.All() {
-		fmt.Printf("%v: %s\n", elem.Id, elem.Description)
+		fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
 	}
 }
 
