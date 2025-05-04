@@ -299,6 +299,26 @@ func TestSet_Update(t *testing.T) {
 	}
 }
 
+func TestSet_Delete(t *testing.T) {
+	s := new(task.Set)
+	s.AddElement(task.Element{
+		Id: 1,
+	})
+	s.AddElement(task.Element{
+		Id: 2,
+	})
+
+	if !s.Delete(1) {
+		t.Fatal("cannot delete task")
+	}
+
+	got := s.Len()
+	want := 1
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
 func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false
