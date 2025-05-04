@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"io"
 	"iter"
+	"slices"
 )
 
 type Set struct {
@@ -99,6 +100,17 @@ func (s *Set) Update(id uint, description string) bool {
 		}
 	}
 	return false
+}
+
+func (s *Set) Delete(id uint) bool {
+	idx := slices.IndexFunc(s.elements, func(elem Element) bool {
+		return elem.Id == id
+	})
+	if idx == -1 {
+		return false
+	}
+	s.elements = slices.Delete(s.elements, idx, idx+1)
+	return true
 }
 
 func (s *Set) newId() uint {

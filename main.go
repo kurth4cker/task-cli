@@ -41,10 +41,12 @@ func add(args []string) {
 	set.Add(args[0])
 
 	f.Seek(0, 0)
-	if _, err := set.WriteTo(f); err != nil {
+	n, err := set.WriteTo(f)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
 	}
+	f.Truncate(n)
 }
 
 func list(args []string) {
@@ -125,10 +127,12 @@ func mark(status task.Status, args []string) {
 	set.Mark(id, status)
 
 	f.Seek(0, 0)
-	if _, err := set.WriteTo(f); err != nil {
+	n, err := set.WriteTo(f)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
 	}
+	f.Truncate(n)
 }
 
 func update(args []string) {
@@ -159,10 +163,12 @@ func update(args []string) {
 	}
 
 	f.Seek(0, 0)
-	if _, err := set.WriteTo(f); err != nil {
+	n, err := set.WriteTo(f)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
 	}
+	f.Truncate(n)
 }
 
 func parseId(arg string) (id uint) {
@@ -173,6 +179,42 @@ func parseId(arg string) (id uint) {
 		id = uint(id64)
 	}
 	return
+}
+
+func remove(args []string) {
+	if len(args) != 1 {
+		fmt.Fprintf(os.Stderr, "invalid number of arguments. usage:\n")
+		fmt.Fprintf(os.Stderr, "    delete <id>\n")
+		os.Exit(1)
+	}
+
+	id := parseId(args[0])
+
+	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1);
+	}
+	defer f.Close()
+
+	set := new(task.Set)
+	if _, err := set.ReadFrom(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot read and parse %s: %s\n", taskFileName, err)
+		os.Exit(1)
+	}
+
+	if !set.Delete(id) {
+		fmt.Fprintf(os.Stderr, "cannot find task with id: %v\n", id)
+		os.Exit(1)
+	}
+
+	f.Seek(0, 0)
+	n, err := set.WriteTo(f)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
+		os.Exit(1)
+	}
+	f.Truncate(n)
 }
 
 func main() {
@@ -188,6 +230,8 @@ func main() {
 		list(args[1:])
 	case "update":
 		update(args[1:])
+	case "delete":
+		remove(args[1:])
 	case "mark-in-progress":
 		mark(task.InProgress, args[1:])
 	case "mark-done":
