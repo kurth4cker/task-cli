@@ -91,6 +91,16 @@ func (s *Set) WriteTo(w io.Writer) (int64, error) {
 	return int64(n), err
 }
 
+func (s *Set) Update(id uint, description string) bool {
+	for i := range s.elements {
+		if s.elements[i].Id == id {
+			s.elements[i].Description = description
+			return true
+		}
+	}
+	return false
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {
