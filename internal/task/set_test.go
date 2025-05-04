@@ -278,6 +278,27 @@ func TestSet_WriteTo(t *testing.T) {
 	}
 }
 
+func TestSet_Update(t *testing.T) {
+	s := new(task.Set)
+	s.AddElement(task.Element{
+		Description: "wrong description",
+		Id: 1,
+	})
+
+	correctDescription := "correct description"
+	if !s.Update(1, correctDescription) {
+		t.Fatal("cannot update task")
+	}
+
+	elem, _ := s.Get(1)
+
+	got := elem.Description
+	want := correctDescription
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
 func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false

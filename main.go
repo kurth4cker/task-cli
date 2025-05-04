@@ -103,6 +103,7 @@ func mark(status task.Status, args []string) {
 	var id uint
 	if id64, err := strconv.ParseUint(args[0], 10, 32); err != nil {
 		fmt.Fprintf(os.Stderr, "cannot parse id: %s\n", err)
+		os.Exit(1)
 	} else {
 		id = uint(id64)
 	}
@@ -130,6 +131,50 @@ func mark(status task.Status, args []string) {
 	}
 }
 
+func update(args []string) {
+	if len(args) != 2 {
+		fmt.Fprintf(os.Stderr, "invalid number of arguments. usage:\n")
+		fmt.Fprintf(os.Stderr, "    update <id> <new description>\n")
+		os.Exit(1)
+	}
+
+	id := parseId(args[0])
+
+	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1);
+	}
+	defer f.Close()
+
+	set := new(task.Set)
+	if _, err := set.ReadFrom(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot read and parse %s: %s\n", taskFileName, err)
+		os.Exit(1)
+	}
+
+	if !set.Update(id, args[1]) {
+		fmt.Fprintf(os.Stderr, "cannot find task with id: %v\n", id)
+		os.Exit(1)
+	}
+
+	f.Seek(0, 0)
+	if _, err := set.WriteTo(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
+		os.Exit(1)
+	}
+}
+
+func parseId(arg string) (id uint) {
+	if id64, err := strconv.ParseUint(arg, 10, 32); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot parse id: %s\n", err)
+		os.Exit(1)
+	} else {
+		id = uint(id64)
+	}
+	return
+}
+
 func main() {
 	args := os.Args[1:]
 	if len(args) < 1 {
@@ -141,6 +186,8 @@ func main() {
 		add(args[1:])
 	case "list":
 		list(args[1:])
+	case "update":
+		update(args[1:])
 	case "mark-in-progress":
 		mark(task.InProgress, args[1:])
 	case "mark-done":
