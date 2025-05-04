@@ -103,6 +103,7 @@ func list(args []string) {
 			fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
 		}
 	} else {
+		// TODO(#26): add filter functionality to task.Set
 		for elem := range set.All() {
 			if elem.Status == status {
 				fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
