@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 
 	"github.com/kurth4cker/task-cli/internal/task"
 )
@@ -90,7 +91,61 @@ func list(args []string) {
 	}
 }
 
-// TODO: add status support
+func mark(status task.Status, args []string) {
+	if len(args) != 1 {
+		fmt.Fprintf(os.Stderr, "invalid usage. please specify only one Id\n")
+		os.Exit(1)
+	}
+
+	var id uint
+	if id64, err := strconv.ParseUint(args[0], 10, 32); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot parse id: %s\n", err)
+	} else {
+		id = uint(id64)
+	}
+
+	// TODO: remove code duplicate
+	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1);
+	}
+	defer f.Close()
+
+	// read data
+	data, err := io.ReadAll(f)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	// unmarshal data into set
+	set := new(task.Set)
+	if len(data) != 0 {
+		err = set.UnmarshalJSON(data)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "cannot parse %s: %s\n", taskFileName, err)
+			os.Exit(1)
+		}
+	}
+
+	// TODO: check for errors
+	set.Mark(id, status)
+
+	data, err = set.MarshalJSON()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot create json output: %s\n", err)
+		os.Exit(1)
+	}
+
+	// write data
+	_, err = f.WriteAt(data, 0)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot write to file: %s\n", err)
+		os.Exit(1)
+	}
+}
+
 func main() {
 	args := os.Args[1:]
 	if len(args) < 1 {
@@ -102,5 +157,9 @@ func main() {
 		add(args[1:])
 	case "list":
 		list(args[1:])
+	case "mark-in-progress":
+		mark(task.InProgress, args[1:])
+	case "mark-done":
+		mark(task.Done, args[1:])
 	}
 }
