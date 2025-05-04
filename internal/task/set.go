@@ -73,6 +73,9 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+	if len(data) == 0 {
+		return 0, nil
+	}
 	if err := s.UnmarshalJSON(data); err != nil {
 		return 0, err
 	}
