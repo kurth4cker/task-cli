@@ -8,7 +8,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 
@@ -33,47 +32,29 @@ func add(args []string) {
 	}
 	defer f.Close()
 
-	// read data
-	data, err := io.ReadAll(f)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	// unmarshal data into set
 	set := new(task.Set)
-	if len(data) != 0 {
-		err = set.UnmarshalJSON(data)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "cannot parse %s: %s\n", taskFileName, err)
-			os.Exit(1)
-		}
-	}
-
-	// add new task and marshal again
-	set.Add(args[0])
-	data, err = set.MarshalJSON()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot create json output: %s\n", err)
+	if _, err := set.ReadFrom(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot read and parse %s: %s\n", taskFileName, err)
 		os.Exit(1)
 	}
 
-	// write data
-	_, err = f.WriteAt(data, 0)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot write to file: %s\n", err)
+	set.Add(args[0])
+
+	f.Seek(0, 0)
+	if _, err := set.WriteTo(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
 	}
 }
 
 func list(args []string) {
-	const all task.Status = "all"
 	if len(args) > 2 {
 		fmt.Fprintf(os.Stderr, "invalid number of arguments. usage:\n")
 		fmt.Fprintf(os.Stderr, "    list [status]\n")
 		os.Exit(1)
 	}
 	var status task.Status
+	listAll := true
 	if len(args) == 1 {
 		switch (args[0]) {
 		case "todo":
@@ -83,6 +64,7 @@ func list(args []string) {
 		case "done":
 			status = task.Done
 		}
+		listAll = false
 	}
 
 	data, err := os.ReadFile(taskFileName)
@@ -98,7 +80,7 @@ func list(args []string) {
 		os.Exit(1)
 	}
 
-	if status == all {
+	if listAll {
 		for elem := range set.All() {
 			fmt.Printf("%v, %v: %s\n", elem.Status, elem.Id, elem.Description)
 		}
@@ -125,7 +107,6 @@ func mark(status task.Status, args []string) {
 		id = uint(id64)
 	}
 
-	// TODO(#23): remove code duplicate
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -133,36 +114,18 @@ func mark(status task.Status, args []string) {
 	}
 	defer f.Close()
 
-	// read data
-	data, err := io.ReadAll(f)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	// unmarshal data into set
 	set := new(task.Set)
-	if len(data) != 0 {
-		err = set.UnmarshalJSON(data)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "cannot parse %s: %s\n", taskFileName, err)
-			os.Exit(1)
-		}
+	if _, err := set.ReadFrom(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot read and parse %s: %s\n", taskFileName, err)
+		os.Exit(1)
 	}
 
 	// TODO(#24): check for errors
 	set.Mark(id, status)
 
-	data, err = set.MarshalJSON()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot create json output: %s\n", err)
-		os.Exit(1)
-	}
-
-	// write data
-	_, err = f.WriteAt(data, 0)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot write to file: %s\n", err)
+	f.Seek(0, 0)
+	if _, err := set.WriteTo(f); err != nil {
+		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
 	}
 }

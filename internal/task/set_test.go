@@ -224,26 +224,36 @@ func TestSet_Mark(t *testing.T) {
 }
 
 func TestSet_ReadFrom(t *testing.T) {
-	s1 := new(task.Set)
-	s1.Add("Task 1")
-	s1.Add("Task 2")
+	t.Run("valid json input", func(t *testing.T) {
+		s1 := new(task.Set)
+		s1.Add("Task 1")
+		s1.Add("Task 2")
 
-	data, err := s1.MarshalJSON()
-	if err != nil {
-		t.Fatal(err)
-	}
+		data, err := s1.MarshalJSON()
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	buf := bytes.NewBuffer(data)
-	s2 := new(task.Set)
-	if _, err := s2.ReadFrom(buf); err != nil {
-		t.Fatal(err)
-	}
+		buf := bytes.NewBuffer(data)
+		s2 := new(task.Set)
+		if _, err := s2.ReadFrom(buf); err != nil {
+			t.Fatal(err)
+		}
 
-	got := slices.Collect(s2.All())
-	want := slices.Collect(s1.All())
-	if !unorderedEqual(got, want) {
-		t.Errorf("got %+v, want %+v", got, want)
-	}
+		got := slices.Collect(s2.All())
+		want := slices.Collect(s1.All())
+		if !unorderedEqual(got, want) {
+			t.Errorf("got %+v, want %+v", got, want)
+		}
+	})
+
+	t.Run("empty json input", func(t *testing.T) {
+		s := new(task.Set)
+		_, err := s.ReadFrom(new(bytes.Buffer))
+		if err != nil {
+			t.Errorf("error occured: %s\n", err)
+		}
+	})
 }
 
 func TestSet_WriteTo(t *testing.T) {
