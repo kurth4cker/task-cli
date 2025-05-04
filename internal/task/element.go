@@ -6,4 +6,13 @@ package task
 type Element struct {
 	Id          uint
 	Description string
+	Status      Status
 }
+
+type Status string
+
+const (
+	Todo Status = "todo"
+	InProgress = "in-progress"
+	Done = "done"
+)

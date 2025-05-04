@@ -16,6 +16,7 @@ func (s *Set) Add(description string) {
 	task := Element{
 		Id:          s.newId(),
 		Description: description,
+		Status: Todo,
 	}
 	s.elements = append(s.elements, task)
 }

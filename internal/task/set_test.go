@@ -65,6 +65,17 @@ func TestSet_Add(t *testing.T) {
 			t.Errorf("Ids should be unique, but %+v is not unique", ids)
 		}
 	})
+
+	t.Run("status defaults to todo", func(t *testing.T) {
+		s := new(task.Set)
+		s.Add("Task 1")
+
+		got := slices.Collect(s.All())[0].Status
+		want := task.Todo
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestSet_All(t *testing.T) {
@@ -106,22 +117,22 @@ func TestSet_All(t *testing.T) {
 }
 
 func TestSet_AddElement(t *testing.T) {
-	tasks := new(task.Set)
-	length := 3
-	for i := range length {
-		tasks.AddElement(task.Element{
-			Id:          uint(i),
-			Description: fmt.Sprint("task", i),
-		})
-	}
+	t.Run("add correct number of elements", func(t *testing.T) {
+		tasks := new(task.Set)
+		length := 3
+		for i := range length {
+			tasks.AddElement(task.Element{
+				Id:          uint(i),
+				Description: fmt.Sprint("task", i),
+			})
+		}
 
-	{
 		want := length
 		got := tasks.Len()
 		if got != want {
 			t.Errorf("got length %v, want %v", got, want)
 		}
-	}
+	})
 }
 
 func TestSet_JSON(t *testing.T) {
