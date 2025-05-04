@@ -235,7 +235,31 @@ func TestSet_ReadFrom(t *testing.T) {
 
 	buf := bytes.NewBuffer(data)
 	s2 := new(task.Set)
-	s2.ReadFrom(buf)
+	if _, err := s2.ReadFrom(buf); err != nil {
+		t.Fatal(err)
+	}
+
+	got := slices.Collect(s2.All())
+	want := slices.Collect(s1.All())
+	if !unorderedEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+}
+
+func TestSet_WriteTo(t *testing.T) {
+	s1 := new(task.Set)
+	s1.Add("Task 1")
+	s1.Add("Task 2")
+
+	buf := new(bytes.Buffer)
+	if _, err := s1.WriteTo(buf); err != nil {
+		t.Fatal(err)
+	}
+
+	s2 := new(task.Set)
+	if _, err := s2.ReadFrom(buf); err != nil {
+		t.Fatal(err)
+	}
 
 	got := slices.Collect(s2.All())
 	want := slices.Collect(s1.All())

@@ -79,6 +79,15 @@ func (s *Set) ReadFrom(r io.Reader) (int64, error) {
 	return 0, nil
 }
 
+func (s *Set) WriteTo(w io.Writer) (int64, error) {
+	data, err := s.MarshalJSON()
+	if err != nil {
+		return 0, err
+	}
+	n, err := w.Write(data)
+	return int64(n), err
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {
