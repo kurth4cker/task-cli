@@ -3,16 +3,20 @@
 
 package task
 
+import "time"
+
 type Element struct {
 	Id          uint
 	Description string
 	Status      Status
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type Status string
 
 const (
 	Todo       Status = "todo"
-	InProgress Status= "in-progress"
+	InProgress Status = "in-progress"
 	Done       Status = "done"
 )
