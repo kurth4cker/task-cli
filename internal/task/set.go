@@ -119,6 +119,21 @@ func (s *Set) Clone() *Set {
 	}
 }
 
+func (s *Set) Equal(other *Set) bool {
+	if s.Len() != other.Len() {
+		return false
+	}
+
+	for e1 := range s.All() {
+		e2, ok := other.Get(e1.Id)
+		if !ok || !e1.Equal(e2) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {
