@@ -13,6 +13,14 @@ type Element struct {
 	UpdatedAt   time.Time
 }
 
+func NewElement(description string) Element {
+	return Element {
+		Description: description,
+		Status: Todo,
+		CreatedAt: time.Now(),
+	}
+}
+
 func (e *Element) Touch() {
 	e.UpdatedAt = time.Now()
 }

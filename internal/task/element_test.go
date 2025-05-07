@@ -11,6 +11,40 @@ import (
 	"github.com/kurth4cker/task-cli/internal/task"
 )
 
+func TestNewElement(t *testing.T) {
+	t.Run("properly setup description", func(t *testing.T) {
+		description := "Task 1"
+		elem := task.NewElement(description)
+
+		got := elem.Description
+		want := description
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("status defaults to todo", func(t *testing.T) {
+		elem := task.NewElement("Task 1")
+
+		got := elem.Status
+		want := task.Todo
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("create with fresh time", func(t *testing.T) {
+		elem := task.NewElement("Task 1")
+
+		got := elem.CreatedAt
+		want := time.Now()
+
+		if got.Sub(want).Abs() > time.Second {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+}
+
 func TestElement_JSON(t *testing.T) {
 	element := task.Element{
 		Id:          0,
