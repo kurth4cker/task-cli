@@ -6,6 +6,7 @@ package task_test
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/kurth4cker/task-cli/internal/task"
 )
@@ -31,6 +32,22 @@ func TestElement_JSON(t *testing.T) {
 
 	if got != want {
 		t.Errorf("got element %v, want %v", got, want)
+	}
+}
+
+func TestElement_Touch(t *testing.T) {
+	elem := task.Element {
+		Description: "Task 1",
+		Status: task.Todo,
+	}
+
+	elem.Touch()
+
+	got := elem.UpdatedAt
+	want := time.Now()
+
+	if got.Sub(want).Abs() > time.Second {
+		t.Errorf("got %v, want %v", got, want)
 	}
 }
 

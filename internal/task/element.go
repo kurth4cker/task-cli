@@ -13,6 +13,10 @@ type Element struct {
 	UpdatedAt   time.Time
 }
 
+func (e *Element) Touch() {
+	e.UpdatedAt = time.Now()
+}
+
 type Status string
 
 const (
