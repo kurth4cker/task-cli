@@ -85,6 +85,21 @@ func TestElement_Touch(t *testing.T) {
 	}
 }
 
+func TestElement_Equal(t *testing.T) {
+	elem1 := task.Element{
+		Description: "Task 1",
+		Status: task.Todo,
+	}
+	elem2 := task.Element{
+		Description: "Task 1",
+		Status: task.Todo,
+	}
+
+	if !elem1.Equal(elem2) {
+		t.Errorf("%v and %v should be equal", elem1, elem2)
+	}
+}
+
 func TestStatus_String(t *testing.T) {
 	cases := []struct{
 		given task.Status

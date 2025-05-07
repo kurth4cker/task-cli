@@ -25,6 +25,11 @@ func (e *Element) Touch() {
 	e.UpdatedAt = time.Now()
 }
 
+func (e *Element) Equal(other Element) bool {
+	return e.Description == other.Description &&
+		e.Status == other.Status
+}
+
 type Status string
 
 const (
