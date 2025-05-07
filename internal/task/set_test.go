@@ -333,6 +333,43 @@ func TestSet_Clone(t *testing.T) {
 	}
 }
 
+func TestSet_Equal(t *testing.T) {
+	t.Run("sets with same descriptions", func(t *testing.T) {
+		s1 := new(task.Set)
+		s1.Add("Task 1")
+		s1.Add("Task 2")
+
+		s2 := new(task.Set)
+		s2.Add("Task 1")
+		s2.Add("Task 2")
+
+		if !s1.Equal(s2) {
+			t.Errorf("should be equal, but not")
+		}
+	})
+
+	t.Run("sets with different length", func(t *testing.T) {
+		s1 := new(task.Set)
+		s2 := new(task.Set)
+		s1.Add("Task 1")
+
+		if s1.Equal(s2) {
+			t.Errorf("should not be equal")
+		}
+	})
+
+	t.Run("sets with different descriptions", func(t *testing.T) {
+		s1 := new(task.Set)
+		s2 := new(task.Set)
+		s1.Add("Task 1")
+		s2.Add("Task 2")
+
+		if s1.Equal(s2) {
+			t.Errorf("should not be equal")
+		}
+	})
+}
+
 func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false
