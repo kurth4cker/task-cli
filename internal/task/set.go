@@ -113,6 +113,12 @@ func (s *Set) Delete(id uint) bool {
 	return true
 }
 
+func (s *Set) Clone() *Set {
+	return &Set{
+		elements: slices.Clone(s.elements),
+	}
+}
+
 func (s *Set) newId() uint {
 	var id uint
 	for _, elem := range s.elements {

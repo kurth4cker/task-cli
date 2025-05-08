@@ -319,6 +319,20 @@ func TestSet_Delete(t *testing.T) {
 	}
 }
 
+func TestSet_Clone(t *testing.T) {
+	s1 := new(task.Set)
+	s1.Add("Task 1")
+	s1.Add("Task 2")
+
+	s2 := s1.Clone()
+
+	got := slices.Collect(s2.All())
+	want := slices.Collect(s1.All())
+	if !unorderedEqual(got, want) {
+		t.Errorf("clone failed")
+	}
+}
+
 func unorderedEqual[S ~[]E, E comparable](s1, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false
