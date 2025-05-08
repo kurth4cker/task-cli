@@ -123,8 +123,10 @@ func mark(status task.Status, args []string) {
 		os.Exit(1)
 	}
 
-	// TODO(#24): check for errors
-	set.Mark(id, status)
+	if !set.Mark(id, status) {
+		fmt.Fprintf(os.Stderr, "cannot find id: %v\n", id)
+		os.Exit(1)
+	}
 
 	f.Seek(0, 0)
 	n, err := set.WriteTo(f)
