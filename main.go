@@ -41,7 +41,7 @@ func add(args []string) {
 	set.Add(args[0])
 
 	f.Seek(0, 0)
-	n, err := set.WriteTo(f)
+	n, err := set.IndentWriteTo(f, "", "    ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
@@ -129,7 +129,7 @@ func mark(status task.Status, args []string) {
 	}
 
 	f.Seek(0, 0)
-	n, err := set.WriteTo(f)
+	n, err := set.IndentWriteTo(f, "", "    ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
@@ -165,7 +165,7 @@ func update(args []string) {
 	}
 
 	f.Seek(0, 0)
-	n, err := set.WriteTo(f)
+	n, err := set.IndentWriteTo(f, "", "    ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
@@ -211,7 +211,7 @@ func remove(args []string) {
 	}
 
 	f.Seek(0, 0)
-	n, err := set.WriteTo(f)
+	n, err := set.IndentWriteTo(f, "", "    ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create and write json output: %s\n", err)
 		os.Exit(1)
