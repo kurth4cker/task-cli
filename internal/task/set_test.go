@@ -203,24 +203,66 @@ func TestSet_Get(t *testing.T) {
 }
 
 func TestSet_Mark(t *testing.T) {
-	s := new(task.Set)
-	s.AddElement(task.Element{
-		Id: uint(1),
-		Status: task.Todo,
-	})
-	s.AddElement(task.Element{
-		Id: uint(2),
-		Status: task.Todo,
+	t.Run("should mark element at given id", func(t *testing.T) {
+		s := new(task.Set)
+		s.AddElement(task.Element{
+			Id: uint(1),
+			Status: task.Todo,
+		})
+		s.AddElement(task.Element{
+			Id: uint(2),
+			Status: task.Todo,
+		})
+
+		s.Mark(1, task.Done)
+
+		elem, _ := s.Get(1)
+		got := elem.Status
+		want := task.Done
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
 	})
 
-	s.Mark(1, task.Done)
+	t.Run("should return true on success", func(t *testing.T) {
+		s := new(task.Set)
+		s.AddElement(task.Element{
+			Id: uint(1),
+			Status: task.Todo,
+		})
+		s.AddElement(task.Element{
+			Id: uint(2),
+			Status: task.Todo,
+		})
 
-	elem, _ := s.Get(1)
-	got := elem.Status
-	want := task.Done
-	if got != want {
-		t.Errorf("got %v, want %v", got, want)
-	}
+		ok := s.Mark(1, task.Done)
+
+		got := ok
+		want := true
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("should return false on fail", func(t *testing.T) {
+		s := new(task.Set)
+		s.AddElement(task.Element{
+			Id: uint(1),
+			Status: task.Todo,
+		})
+		s.AddElement(task.Element{
+			Id: uint(2),
+			Status: task.Todo,
+		})
+
+		ok := s.Mark(3, task.InProgress)
+
+		got := ok
+		want := false
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestSet_ReadFrom(t *testing.T) {

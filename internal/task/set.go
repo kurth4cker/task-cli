@@ -60,12 +60,14 @@ func (s *Set) Get(id uint) (Element, bool) {
 	return last, false
 }
 
-func (s *Set) Mark(id uint, status Status) {
+func (s *Set) Mark(id uint, status Status) bool {
 	for i := range s.elements {
 		if s.elements[i].Id == id {
 			s.elements[i].Status = status
+			return true
 		}
 	}
+	return false
 }
 
 func (s *Set) ReadFrom(r io.Reader) (n int64, err error) {
