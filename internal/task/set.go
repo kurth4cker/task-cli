@@ -68,19 +68,20 @@ func (s *Set) Mark(id uint, status Status) {
 	}
 }
 
-func (s *Set) ReadFrom(r io.Reader) (int64, error) {
-	// TODO(#35): return correct read bytes
+func (s *Set) ReadFrom(r io.Reader) (n int64, err error) {
 	data, err := io.ReadAll(r)
+	n = int64(len(data))
 	if err != nil {
-		return 0, err
+		return
 	}
-	if len(data) == 0 {
-		return 0, nil
+	if n == 0 {
+		return
 	}
-	if err := s.UnmarshalJSON(data); err != nil {
-		return 0, err
+	err = s.UnmarshalJSON(data)
+	if err != nil {
+		return
 	}
-	return 0, nil
+	return
 }
 
 func (s *Set) WriteTo(w io.Writer) (int64, error) {
