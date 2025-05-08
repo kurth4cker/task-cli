@@ -2,7 +2,8 @@
 
 # task-cli - Manage your tasks [WIP]
 
-**task-cli** is a simple CLI program. It is inspired by [roadmap.sh][].
+**task-cli** is a simple CLI program. It is inspired by
+[https://roadmap.sh/projects/task-tracker](https://roadmap.sh/projects/task-tracker).
 
 **Note:** This program is still in Work-in-Progress. Most of functionality is
 not implemented yet.
