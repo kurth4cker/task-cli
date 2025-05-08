@@ -254,6 +254,17 @@ func TestSet_ReadFrom(t *testing.T) {
 			t.Errorf("error occured: %s\n", err)
 		}
 	})
+
+	t.Run("success read with correct number of bytes", func(t *testing.T) {
+		s := new(task.Set)
+		buf := bytes.NewBufferString(`[{"Id":0,"Description":"Task 1","Status:"todo"}]`)
+
+		want := int64(buf.Len())
+		got, _ := s.ReadFrom(buf)
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestSet_WriteTo(t *testing.T) {
