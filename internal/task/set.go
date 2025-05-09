@@ -32,10 +32,6 @@ func (s *Set) Len() int {
 	return len(s.elements)
 }
 
-func (s *Set) AddElement(elem Element) {
-	s.elements = append(s.elements, elem)
-}
-
 func (s *Set) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&s.elements)
 }
