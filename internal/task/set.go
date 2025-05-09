@@ -91,6 +91,7 @@ func (s *Set) IndentWriteTo(w io.Writer, prefix, indent string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+	data = append(data, '\n')
 	n, err := w.Write(data)
 	return int64(n), err
 }
