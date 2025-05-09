@@ -23,6 +23,15 @@ func TestSet_Add(t *testing.T) {
 		return set
 	}
 
+	isUniq := func(ids []uint) bool {
+		for idx, elem := range ids {
+			if slices.Contains(ids[idx+1:], elem) {
+				return false
+			}
+		}
+		return true
+	}
+
 	t.Run("correct length", func(t *testing.T) {
 		set := freshSet(3)
 		got := set.Len()
@@ -51,19 +60,24 @@ func TestSet_Add(t *testing.T) {
 	})
 
 	t.Run("unique ids", func(t *testing.T) {
-		isUniq := func(ids []uint) bool {
-			for idx, elem := range ids {
-				if slices.Contains(ids[idx+1:], elem) {
-					return false
-				}
-			}
-			return true
-		}
-
 		set := freshSet(3)
 		ids := getIds(set)
 		if !isUniq(ids) {
 			t.Errorf("Ids should be unique, but %+v is not unique", ids)
+		}
+	})
+
+	t.Run("should return ids", func(t *testing.T) {
+		s := new(task.Set)
+		ids := make([]uint, 0, 4)
+		ids = append(ids, s.Add("Task 1").Id)
+		ids = append(ids, s.Add("Task 2").Id)
+		ids = append(ids, s.Add("Task 3").Id)
+
+		got := isUniq(ids)
+		want := true
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
 		}
 	})
 

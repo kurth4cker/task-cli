@@ -14,24 +14,18 @@ type Set struct {
 	elements []Element
 }
 
-func (s *Set) Add(description string) {
+func (s *Set) Add(description string) Element {
 	task := Element{
 		Id:          s.newId(),
 		Description: description,
 		Status: Todo,
 	}
 	s.elements = append(s.elements, task)
+	return task
 }
 
 func (s *Set) All() iter.Seq[Element] {
 	return slices.Values(s.elements)
-	// return func(yield func(Element) bool) {
-	// 	for _, elem := range s.elements {
-	// 		if !yield(elem) {
-	// 			break
-	// 		}
-	// 	}
-	// }
 }
 
 func (s *Set) Len() int {
