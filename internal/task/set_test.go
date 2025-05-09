@@ -131,35 +131,13 @@ func TestSet_All(t *testing.T) {
 	})
 }
 
-func TestSet_AddElement(t *testing.T) {
-	t.Run("add correct number of elements", func(t *testing.T) {
-		tasks := new(task.Set)
-		length := 3
-		for i := range length {
-			tasks.AddElement(task.Element{
-				Id:          uint(i),
-				Description: fmt.Sprint("task", i),
-			})
-		}
-
-		want := length
-		got := tasks.Len()
-		if got != want {
-			t.Errorf("got length %v, want %v", got, want)
-		}
-	})
-}
-
 func TestSet_JSON(t *testing.T) {
 	tasks := new(task.Set)
 	tasks.Add("task 1")
 	tasks.Add("task 2")
 	tasks.Add("task 3")
 
-	var want task.Set
-	for elem := range tasks.All() {
-		want.AddElement(elem)
-	}
+	want := tasks.Clone()
 
 	var got task.Set
 	{
@@ -183,35 +161,26 @@ func TestSet_JSON(t *testing.T) {
 
 func TestSet_Get(t *testing.T) {
 	s := new(task.Set)
-	s.AddElement(task.Element{
-		Id: uint(1),
-		Status: task.Done,
-	})
-	s.AddElement(task.Element{Id: uint(2)})
+	id := s.Add("task 1").Id
+	s.Add("Task 2")
 
 	t.Run("found element", func(t *testing.T) {
-		elem, ok := s.Get(1)
+		elem, ok := s.Get(id)
 		if !ok {
 			t.Fatalf("cannot found element")
 		}
 
 		got := elem.Id
-		want := uint(1)
+		want := id
 		if got != want {
 			t.Errorf("got %v, want %v", got, want);
 		}
 	})
 
 	t.Run("non-exist element", func(t *testing.T) {
-		elem, ok := s.Get(99)
+		_, ok := s.Get(99)
 		if ok {
-			t.Fatalf("found element")
-		}
-
-		got := elem.Id
-		want := uint(2)
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
+			t.Errorf("found element, should not found")
 		}
 	})
 }
@@ -219,18 +188,12 @@ func TestSet_Get(t *testing.T) {
 func TestSet_Mark(t *testing.T) {
 	t.Run("should mark element at given id", func(t *testing.T) {
 		s := new(task.Set)
-		s.AddElement(task.Element{
-			Id: uint(1),
-			Status: task.Todo,
-		})
-		s.AddElement(task.Element{
-			Id: uint(2),
-			Status: task.Todo,
-		})
+		id := s.Add("task 1").Id
+		s.Add("task 1")
 
-		s.Mark(1, task.Done)
+		s.Mark(id, task.Done)
 
-		elem, _ := s.Get(1)
+		elem, _ := s.Get(id)
 		got := elem.Status
 		want := task.Done
 		if got != want {
@@ -240,16 +203,10 @@ func TestSet_Mark(t *testing.T) {
 
 	t.Run("should return true on success", func(t *testing.T) {
 		s := new(task.Set)
-		s.AddElement(task.Element{
-			Id: uint(1),
-			Status: task.Todo,
-		})
-		s.AddElement(task.Element{
-			Id: uint(2),
-			Status: task.Todo,
-		})
+		id := s.Add("Task 1").Id
+		s.Add("Task 2")
 
-		ok := s.Mark(1, task.Done)
+		ok := s.Mark(id, task.Done)
 
 		got := ok
 		want := true
@@ -260,16 +217,17 @@ func TestSet_Mark(t *testing.T) {
 
 	t.Run("should return false on fail", func(t *testing.T) {
 		s := new(task.Set)
-		s.AddElement(task.Element{
-			Id: uint(1),
-			Status: task.Todo,
-		})
-		s.AddElement(task.Element{
-			Id: uint(2),
-			Status: task.Todo,
-		})
+		ids := make([]uint, 0, 2)
+		ids = append(ids, s.Add("Task 1").Id)
+		ids = append(ids, s.Add("Task 2").Id)
+		var id uint = 0
+		for _, x := range ids {
+			if id == x {
+				id++
+			}
+		}
 
-		ok := s.Mark(3, task.InProgress)
+		ok := s.Mark(id, task.InProgress)
 
 		got := ok
 		want := false
@@ -347,17 +305,14 @@ func TestSet_WriteTo(t *testing.T) {
 
 func TestSet_Update(t *testing.T) {
 	s := new(task.Set)
-	s.AddElement(task.Element{
-		Description: "wrong description",
-		Id: 1,
-	})
+	id := s.Add("wrong description").Id
 
 	correctDescription := "correct description"
-	if !s.Update(1, correctDescription) {
+	if !s.Update(id, correctDescription) {
 		t.Fatal("cannot update task")
 	}
 
-	elem, _ := s.Get(1)
+	elem, _ := s.Get(id)
 
 	got := elem.Description
 	want := correctDescription
@@ -368,14 +323,10 @@ func TestSet_Update(t *testing.T) {
 
 func TestSet_Delete(t *testing.T) {
 	s := new(task.Set)
-	s.AddElement(task.Element{
-		Id: 1,
-	})
-	s.AddElement(task.Element{
-		Id: 2,
-	})
+	id := s.Add("Task 1").Id
+	s.Add("Task 2")
 
-	if !s.Delete(1) {
+	if !s.Delete(id) {
 		t.Fatal("cannot delete task")
 	}
 
