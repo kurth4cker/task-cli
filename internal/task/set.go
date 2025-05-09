@@ -24,13 +24,14 @@ func (s *Set) Add(description string) {
 }
 
 func (s *Set) All() iter.Seq[Element] {
-	return func(yield func(Element) bool) {
-		for _, elem := range s.elements {
-			if !yield(elem) {
-				break
-			}
-		}
-	}
+	return slices.Values(s.elements)
+	// return func(yield func(Element) bool) {
+	// 	for _, elem := range s.elements {
+	// 		if !yield(elem) {
+	// 			break
+	// 		}
+	// 	}
+	// }
 }
 
 func (s *Set) Len() int {
