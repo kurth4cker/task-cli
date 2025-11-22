@@ -1,5 +1,8 @@
 [![Go](https://github.com/kurth4cker/task-cli/actions/workflows/go.yml/badge.svg)](https://github.com/kurth4cker/task-cli/actions/workflows/go.yml)
 
+# ARCHIVAL NOTE
+## This was a roadmap.sh project completion attempt. No longer needed.
+
 # task-cli - Manage your tasks [WIP]
 
 **task-cli** is a simple CLI program. It is inspired by
