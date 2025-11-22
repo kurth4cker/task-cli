@@ -28,7 +28,7 @@ func add(args []string) {
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1);
+		os.Exit(1)
 	}
 	defer f.Close()
 
@@ -58,7 +58,7 @@ func list(args []string) {
 	var status task.Status
 	listAll := true
 	if len(args) == 1 {
-		switch (args[0]) {
+		switch args[0] {
 		case "todo":
 			status = task.Todo
 		case "in-progress":
@@ -113,7 +113,7 @@ func mark(status task.Status, args []string) {
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1);
+		os.Exit(1)
 	}
 	defer f.Close()
 
@@ -149,7 +149,7 @@ func update(args []string) {
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1);
+		os.Exit(1)
 	}
 	defer f.Close()
 
@@ -195,7 +195,7 @@ func remove(args []string) {
 	f, err := os.OpenFile(taskFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1);
+		os.Exit(1)
 	}
 	defer f.Close()
 
